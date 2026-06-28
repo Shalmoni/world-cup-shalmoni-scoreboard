@@ -2,33 +2,33 @@
   "players": [
     {
       "name": "Otsar",
-      "played": 0,
-      "points": 10
+      "played": 1,
+      "points": 5
     },
     {
       "name": "Coral",
-      "played": 0,
-      "points": 20
+      "played": 1,
+      "points": 1
     },
     {
       "name": "David",
-      "played": 0,
-      "points": 0
+      "played": 1,
+      "points": 1
     },
     {
       "name": "Yosef",
-      "played": 0,
-      "points": 0
+      "played": 1,
+      "points": 5
     },
     {
       "name": "Shira",
-      "played": 0,
-      "points": 0
+      "played": 1,
+      "points": 5
     },
     {
       "name": "Yonatan",
-      "played": 0,
-      "points": 0
+      "played": 1,
+      "points": 3
     },
     {
       "name": "Iris",
@@ -37,8 +37,8 @@
     },
     {
       "name": "Becky",
-      "played": 0,
-      "points": 0
+      "played": 1,
+      "points": 1
     }
   ],
   "rounds": [
