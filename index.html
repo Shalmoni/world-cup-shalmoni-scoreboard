@@ -436,8 +436,21 @@
     </form>
   </dialog>
 
+  <dialog id="publishDialog">
+    <form class="editor" method="dialog">
+      <h2>Publish to GitHub</h2>
+      <input id="githubTokenInput" type="password" autocomplete="off" placeholder="GitHub token" aria-label="GitHub token">
+      <p class="password-error" id="publishError">Token stays in this browser session.</p>
+      <div class="dialog-actions">
+        <button class="primary" id="publishButton" type="button">Publish</button>
+        <button id="publishCancelButton" type="button">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
   <script>
     const adminPasswordHash = "54b88770a73edab54dadce46b7062c166b046ef57dd58a9953685a72ea541f9b";
+    const githubDispatchUrl = "https://api.github.com/repos/Shalmoni/world-cup-shalmoni-scoreboard/dispatches";
     const starterPlayers = [
       { name: "Otsar", points: 10, played: 0 },
       { name: "Coral", points: 20, played: 0 },
@@ -467,6 +480,9 @@
     const passwordError = document.querySelector("#passwordError");
     const roundsDialog = document.querySelector("#roundsDialog");
     const roundEditorRows = document.querySelector("#roundEditorRows");
+    const publishDialog = document.querySelector("#publishDialog");
+    const githubTokenInput = document.querySelector("#githubTokenInput");
+    const publishError = document.querySelector("#publishError");
     const hint = document.querySelector("#hint");
     const toolbar = document.querySelector(".toolbar");
     const params = new URLSearchParams(location.search);
@@ -477,6 +493,7 @@
     let rounds = state.rounds;
 
     setAdmin(isAdmin);
+    loadPublishedState();
 
     function loadState() {
       const fromStateUrl = params.get("state");
@@ -496,8 +513,22 @@
           return defaultState();
         }
       }
-      const saved = localStorage.getItem("shalmoni-scoreboard-state");
-      return saved ? normalizeState(JSON.parse(saved)) : defaultState();
+      return defaultState();
+    }
+
+    async function loadPublishedState() {
+      if (params.has("state")) return;
+      try {
+        const response = await fetch(`data.json?cache=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) return;
+        const publishedState = normalizeState(await response.json());
+        players = publishedState.players;
+        rounds = publishedState.rounds;
+        persistState();
+        render();
+      } catch {
+        // Keep the bundled starter state if the published JSON cannot be fetched.
+      }
     }
 
     function defaultState() {
@@ -526,14 +557,14 @@
     }
 
     function syncUrlToState() {
-      history.replaceState(null, "", `${location.pathname}?state=${encodedState()}`);
+      history.replaceState(null, "", location.pathname);
     }
 
     function flashHint(message) {
       hint.textContent = message;
       window.clearTimeout(flashHint.timeout);
       flashHint.timeout = window.setTimeout(() => {
-        hint.textContent = isAdmin ? "ADMIN MODE: edit scores or rounds, then share the viewer link." : "";
+        hint.textContent = isAdmin ? "ADMIN MODE: edit scores or rounds, then exit admin to publish." : "";
       }, 1800);
     }
 
@@ -659,7 +690,7 @@
     }
 
     function makeShareUrl() {
-      return `${location.origin}${location.pathname}?state=${encodedState()}`;
+      return `${location.origin}${location.pathname}`;
     }
 
     function setAdmin(nextAdmin) {
@@ -668,7 +699,7 @@
       toolbar.classList.toggle("viewer", !isAdmin);
       sessionStorage.setItem("shalmoni-scoreboard-admin", String(isAdmin));
       hint.textContent = isAdmin
-        ? "ADMIN MODE: edit scores or rounds, then share the viewer link."
+        ? "ADMIN MODE: edit scores or rounds, then exit admin to publish."
         : "";
     }
 
@@ -676,6 +707,53 @@
       const bytes = new TextEncoder().encode(password);
       const hashBuffer = await crypto.subtle.digest("SHA-256", bytes);
       return [...new Uint8Array(hashBuffer)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function publishToGitHub(token) {
+      publishError.textContent = "Publishing...";
+      const response = await fetch(githubDispatchUrl, {
+        method: "POST",
+        headers: {
+          "Accept": "application/vnd.github+json",
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "X-GitHub-Api-Version": "2022-11-28"
+        },
+        body: JSON.stringify({
+          event_type: "scoreboard-update",
+          client_payload: {
+            state: { players, rounds }
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `GitHub returned ${response.status}`);
+      }
+    }
+
+    async function exitAdminAndPublish() {
+      persistState();
+      syncUrlToState();
+      const token = sessionStorage.getItem("shalmoni-github-token");
+      if (!token) {
+        githubTokenInput.value = "";
+        publishError.textContent = "Enter a GitHub token to publish these scores.";
+        publishDialog.showModal();
+        githubTokenInput.focus();
+        return;
+      }
+      try {
+        flashHint("Publishing to GitHub...");
+        await publishToGitHub(token);
+        setAdmin(false);
+        hint.textContent = "Published. GitHub Pages may take a minute to refresh.";
+      } catch (error) {
+        sessionStorage.removeItem("shalmoni-github-token");
+        publishError.textContent = "Publish failed. Enter token again.";
+        publishDialog.showModal();
+      }
     }
 
     document.querySelector("#keyButton").addEventListener("click", () => {
@@ -717,7 +795,7 @@
     });
 
     document.querySelector("#exitAdminButton").addEventListener("click", () => {
-      setAdmin(false);
+      exitAdminAndPublish();
     });
 
     document.querySelector("#addButton").addEventListener("click", () => addEditorRow());
@@ -725,6 +803,26 @@
     document.querySelector("#cancelButton").addEventListener("click", () => editorDialog.close());
     document.querySelector("#saveRoundsButton").addEventListener("click", saveRoundsFromEditor);
     document.querySelector("#cancelRoundsButton").addEventListener("click", () => roundsDialog.close());
+
+    document.querySelector("#publishButton").addEventListener("click", async () => {
+      const token = githubTokenInput.value.trim();
+      if (!token) {
+        publishError.textContent = "Token required.";
+        return;
+      }
+      try {
+        sessionStorage.setItem("shalmoni-github-token", token);
+        await publishToGitHub(token);
+        publishDialog.close();
+        setAdmin(false);
+        hint.textContent = "Published. GitHub Pages may take a minute to refresh.";
+      } catch (error) {
+        sessionStorage.removeItem("shalmoni-github-token");
+        publishError.textContent = "Publish failed. Check token permissions.";
+      }
+    });
+
+    document.querySelector("#publishCancelButton").addEventListener("click", () => publishDialog.close());
 
     document.querySelector("#copyButton").addEventListener("click", async () => {
       const url = makeShareUrl();

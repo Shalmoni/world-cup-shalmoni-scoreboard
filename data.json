@@ -1,0 +1,20 @@
+{
+  "players": [
+    { "name": "Otsar", "points": 10, "played": 0 },
+    { "name": "Coral", "points": 20, "played": 0 },
+    { "name": "David", "points": 0, "played": 0 },
+    { "name": "Yosef", "points": 0, "played": 0 },
+    { "name": "Shira", "points": 0, "played": 0 },
+    { "name": "Yonatan", "points": 0, "played": 0 },
+    { "name": "Iris", "points": 0, "played": 0 },
+    { "name": "Becky", "points": 0, "played": 0 }
+  ],
+  "rounds": [
+    { "name": "Round of 32", "done": 1, "total": 16, "current": true },
+    { "name": "Round of 16", "done": 0, "total": 8, "current": false },
+    { "name": "Quarter finals", "done": 0, "total": 4, "current": false },
+    { "name": "Semi finals", "done": 0, "total": 2, "current": false },
+    { "name": "3rd place play off", "done": 0, "total": 1, "current": false },
+    { "name": "Finals", "done": 0, "total": 1, "current": false }
+  ]
+}
