@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>World Cup Shalmoni Scoreboard</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #000;
+      --ink: #fff;
+      --muted: #fff;
+      --dim: #777;
+      --line: #fff;
+      --card: #000;
+      --accent: #39ff14;
+      --shadow: 8px 8px 0 #39ff14;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    main {
+      width: min(100%, 720px);
+      margin: 0 auto;
+      padding: 18px 14px 36px;
+    }
+
+    .topline {
+      display: flex;
+      justify-content: flex-end;
+      min-height: 44px;
+    }
+
+    .key-button {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      min-height: 42px;
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: none;
+      font-size: 1.15rem;
+    }
+
+    header {
+      padding: 2px 2px 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.9rem, 11vw, 4rem);
+      line-height: .96;
+      letter-spacing: 0;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+      text-transform: uppercase;
+    }
+
+    .rounds {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 4px;
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+      text-transform: uppercase;
+      font-size: clamp(.5rem, 1.9vw, .72rem);
+      font-weight: 850;
+    }
+
+    .round {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      min-height: 46px;
+      padding: 5px 3px;
+      border: 1px solid var(--dim);
+      background: #000;
+      color: var(--dim);
+      text-align: center;
+      line-height: 1.05;
+      overflow-wrap: anywhere;
+    }
+
+    .round.current {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 2px 2px 0 var(--accent);
+    }
+
+    .round-count {
+      font-size: 1.15em;
+      color: inherit;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      padding: 10px 0 14px;
+      background: var(--bg);
+    }
+
+    .toolbar.viewer {
+      display: none;
+    }
+
+    .admin-only {
+      display: none;
+    }
+
+    body[data-admin="true"] .admin-only {
+      display: inline-block;
+    }
+
+    body[data-admin="true"] .toolbar.admin-only {
+      display: grid;
+    }
+
+    button {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      background: var(--card);
+      color: var(--ink);
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--accent);
+      text-transform: uppercase;
+    }
+
+    button.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #000;
+    }
+
+    body:not([data-admin="true"]) .toolbar .primary {
+      background: #000;
+      color: var(--accent);
+    }
+
+    button.icon {
+      width: 48px;
+      flex: 0 0 48px;
+      font-size: 1.25rem;
+    }
+
+    button.link-button {
+      width: auto;
+      padding: 0 12px;
+      font-size: .88rem;
+    }
+
+    .scoreboard {
+      display: grid;
+      gap: 10px;
+    }
+
+    .player {
+      display: grid;
+      grid-template-columns: 46px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 74px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .player.top-two,
+    .player.top-three {
+      border-color: var(--accent);
+    }
+
+    .player.top-two {
+      box-shadow: 5px 5px 0 var(--accent);
+    }
+
+    .player.top-three {
+      box-shadow: 3px 3px 0 var(--accent);
+    }
+
+    .rank {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--accent);
+      border-radius: 0;
+      background: #000;
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    .player:first-child .rank {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .player.top-two .rank,
+    .player.top-three .rank {
+      border-width: 2px;
+    }
+
+    .player.top-two .rank {
+      background: #000;
+      color: var(--accent);
+    }
+
+    .name {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      min-width: 0;
+      overflow-wrap: anywhere;
+      font-size: 1.08rem;
+      font-weight: 850;
+    }
+
+    .played {
+      flex: 0 0 auto;
+      color: var(--dim);
+      font-size: .72rem;
+      font-weight: 850;
+    }
+
+    .score {
+      min-width: 72px;
+      text-align: right;
+      font-size: 1.75rem;
+      line-height: 1;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .points {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: .75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    dialog {
+      width: min(calc(100vw - 24px), 620px);
+      max-height: min(82vh, 760px);
+      border: 1px solid var(--line);
+      border-radius: 0;
+      padding: 0;
+      background: var(--card);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    dialog::backdrop { background: rgba(0, 0, 0, .82); }
+
+    .editor {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .editor h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 68px 68px 44px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .score-editor-labels {
+      display: grid;
+      grid-template-columns: 1fr 68px 68px 44px;
+      gap: 8px;
+      color: var(--dim);
+      font-size: .68rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .score-editor-labels span:not(:first-child) {
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      padding: 10px 12px;
+      background: #000;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .password-error {
+      min-height: 1.2em;
+      margin: 0;
+      color: var(--accent);
+      font-size: .82rem;
+      text-transform: uppercase;
+    }
+
+    .round-editor-rows {
+      display: grid;
+      gap: 8px;
+    }
+
+    .round-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 58px 58px 44px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .round-row button[aria-pressed="true"] {
+      background: var(--accent);
+      color: #000;
+    }
+
+    input[type="number"] {
+      text-align: center;
+      font-weight: 850;
+    }
+
+    .dialog-actions {
+      display: flex;
+      gap: 8px;
+      position: sticky;
+      bottom: 0;
+      padding-top: 8px;
+      border-top: 1px solid var(--accent);
+      background: var(--card);
+    }
+
+    .hint {
+      margin: 12px 2px 0;
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    @media (min-width: 640px) {
+      main { padding-top: 28px; }
+      .player { grid-template-columns: 56px 1fr auto; padding: 16px; }
+      .rank { width: 48px; height: 48px; }
+      .score { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="topline">
+      <button class="key-button" id="keyButton" type="button" title="Admin access" aria-label="Admin access">⚿</button>
+    </div>
+
+    <header>
+      <h1>World Cup Shalmoni Scoreboard</h1>
+      <p class="subtitle">Live standings for the Shalmoni World Cup 2026 prediction game.</p>
+      <ol class="rounds" id="rounds" aria-label="Tournament rounds"></ol>
+    </header>
+
+    <section class="toolbar admin-only" aria-label="Scoreboard controls">
+      <button class="primary admin-only" id="editButton" type="button">Edit scores</button>
+      <button class="primary admin-only" id="roundsButton" type="button">Edit rounds</button>
+      <button class="link-button admin-only" id="copyButton" type="button" title="Copy viewer link" aria-label="Copy viewer link">Share link</button>
+      <button class="link-button admin-only" id="exitAdminButton" type="button">Exit admin</button>
+    </section>
+
+    <section class="scoreboard" id="scoreboard" aria-live="polite"></section>
+    <p class="hint" id="hint"></p>
+  </main>
+
+  <dialog id="editorDialog">
+    <form class="editor" method="dialog">
+      <h2>Edit scores</h2>
+      <div id="editorRows"></div>
+      <button id="addButton" type="button">Add person</button>
+      <div class="dialog-actions">
+        <button class="primary" id="saveButton" type="button">Save</button>
+        <button id="cancelButton" type="button">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="passwordDialog">
+    <form class="editor" method="dialog">
+      <h2>Admin access</h2>
+      <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Password" aria-label="Admin password">
+      <p class="password-error" id="passwordError"></p>
+      <div class="dialog-actions">
+        <button class="primary" id="unlockButton" type="button">Unlock</button>
+        <button id="passwordCancelButton" type="button">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="roundsDialog">
+    <form class="editor" method="dialog">
+      <h2>Edit rounds</h2>
+      <div class="round-editor-rows" id="roundEditorRows"></div>
+      <div class="dialog-actions">
+        <button class="primary" id="saveRoundsButton" type="button">Save</button>
+        <button id="cancelRoundsButton" type="button">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    const adminPasswordHash = "f32ed91fa9377a724b449ac4a37aecfc2a71796a88083808e7735b568e2db8a4";
+    const starterPlayers = [
+      { name: "Otsar", points: 0, played: 0 },
+      { name: "Coral", points: 0, played: 0 },
+      { name: "David", points: 0, played: 0 },
+      { name: "Yosef", points: 0, played: 0 },
+      { name: "Shira", points: 0, played: 0 },
+      { name: "Yonatan", points: 0, played: 0 },
+      { name: "Iris", points: 0, played: 0 },
+      { name: "Becky", points: 0, played: 0 }
+    ];
+
+    const starterRounds = [
+      { name: "Round of 32", done: 1, total: 16, current: true },
+      { name: "Round of 16", done: 0, total: 8, current: false },
+      { name: "Quarter finals", done: 0, total: 4, current: false },
+      { name: "Semi finals", done: 0, total: 2, current: false },
+      { name: "3rd place play off", done: 0, total: 1, current: false },
+      { name: "Finals", done: 0, total: 1, current: false }
+    ];
+
+    const scoreboard = document.querySelector("#scoreboard");
+    const roundsList = document.querySelector("#rounds");
+    const editorDialog = document.querySelector("#editorDialog");
+    const editorRows = document.querySelector("#editorRows");
+    const passwordDialog = document.querySelector("#passwordDialog");
+    const passwordInput = document.querySelector("#passwordInput");
+    const passwordError = document.querySelector("#passwordError");
+    const roundsDialog = document.querySelector("#roundsDialog");
+    const roundEditorRows = document.querySelector("#roundEditorRows");
+    const hint = document.querySelector("#hint");
+    const toolbar = document.querySelector(".toolbar");
+    const params = new URLSearchParams(location.search);
+
+    let isAdmin = sessionStorage.getItem("shalmoni-scoreboard-admin") === "true";
+    let state = loadState();
+    let players = state.players;
+    let rounds = state.rounds;
+
+    setAdmin(isAdmin);
+
+    function loadState() {
+      const fromStateUrl = params.get("state");
+      if (fromStateUrl) {
+        try {
+          const parsed = JSON.parse(atob(decodeURIComponent(fromStateUrl)));
+          return normalizeState(parsed);
+        } catch {
+          return defaultState();
+        }
+      }
+      const fromScoresUrl = params.get("scores");
+      if (fromScoresUrl) {
+        try {
+          return normalizeState({ players: JSON.parse(atob(decodeURIComponent(fromScoresUrl))) });
+        } catch {
+          return defaultState();
+        }
+      }
+      const saved = localStorage.getItem("shalmoni-scoreboard-state");
+      return saved ? normalizeState(JSON.parse(saved)) : defaultState();
+    }
+
+    function defaultState() {
+      return {
+        players: structuredClone(starterPlayers),
+        rounds: structuredClone(starterRounds)
+      };
+    }
+
+    function normalizeState(nextState) {
+      return {
+        players: Array.isArray(nextState.players)
+          ? nextState.players.map((player) => ({
+              name: player.name || "Unnamed",
+              points: Number(player.points) || 0,
+              played: Number(player.played) || 0
+            }))
+          : structuredClone(starterPlayers),
+        rounds: Array.isArray(nextState.rounds) ? nextState.rounds : structuredClone(starterRounds)
+      };
+    }
+
+    function persistState() {
+      state = { players, rounds };
+      localStorage.setItem("shalmoni-scoreboard-state", JSON.stringify(state));
+    }
+
+    function syncUrlToState() {
+      history.replaceState(null, "", `${location.pathname}?state=${encodedState()}`);
+    }
+
+    function flashHint(message) {
+      hint.textContent = message;
+      window.clearTimeout(flashHint.timeout);
+      flashHint.timeout = window.setTimeout(() => {
+        hint.textContent = isAdmin ? "ADMIN MODE: edit scores or rounds, then share the viewer link." : "";
+      }, 1800);
+    }
+
+    function sortedPlayers() {
+      return [...players].sort((a, b) => Number(b.points) - Number(a.points) || a.name.localeCompare(b.name));
+    }
+
+    function render() {
+      renderRounds();
+      scoreboard.innerHTML = "";
+      sortedPlayers().forEach((player, index) => {
+        const item = document.createElement("article");
+        item.className = `player${index === 1 ? " top-two" : ""}${index === 2 ? " top-three" : ""}`;
+        item.innerHTML = `
+          <div class="rank">${index + 1}</div>
+          <div class="name"><span class="player-name"></span><span class="played"></span></div>
+          <div class="score">${Number(player.points) || 0}<span class="points">points</span></div>
+        `;
+        item.querySelector(".player-name").textContent = player.name || "Unnamed";
+        item.querySelector(".played").textContent = `${Number(player.played) || 0} voted`;
+        scoreboard.appendChild(item);
+      });
+    }
+
+    function renderRounds() {
+      roundsList.innerHTML = "";
+      rounds.forEach((round) => {
+        const item = document.createElement("li");
+        item.className = `round${round.current ? " current" : ""}`;
+        item.innerHTML = `
+          <span></span>
+          <span class="round-count">${Number(round.done) || 0}/${Number(round.total) || 0}</span>
+        `;
+        item.querySelector("span").textContent = round.name || "Round";
+        roundsList.appendChild(item);
+      });
+    }
+
+    function renderEditor() {
+      editorRows.innerHTML = "";
+      const labels = document.createElement("div");
+      labels.className = "score-editor-labels";
+      labels.innerHTML = "<span>Name</span><span>Points</span><span>Voted</span><span></span>";
+      editorRows.appendChild(labels);
+      players.forEach((player, index) => addEditorRow(player, index));
+    }
+
+    function addEditorRow(player = { name: "", points: 0, played: 0 }, index = editorRows.children.length) {
+      const row = document.createElement("div");
+      row.className = "row";
+      row.innerHTML = `
+        <input aria-label="Name" value="">
+        <input aria-label="Points" type="number" inputmode="numeric" value="${Number(player.points) || 0}" placeholder="PTS">
+        <input aria-label="Games voted" type="number" inputmode="numeric" value="${Number(player.played) || 0}" placeholder="VOTED">
+        <button class="icon" type="button" aria-label="Remove person">×</button>
+      `;
+      row.querySelector("input").value = player.name || "";
+      row.querySelector("button").addEventListener("click", () => {
+        row.remove();
+        if (!editorRows.children.length) addEditorRow();
+      });
+      editorRows.appendChild(row);
+    }
+
+    function saveFromEditor() {
+      players = [...editorRows.querySelectorAll(".row")].map((row) => {
+        const inputs = row.querySelectorAll("input");
+        return {
+          name: inputs[0].value.trim() || "Unnamed",
+          points: Number(inputs[1].value) || 0,
+          played: Number(inputs[2].value) || 0
+        };
+      });
+      persistState();
+      syncUrlToState();
+      editorDialog.close();
+      render();
+      flashHint("Scores saved.");
+    }
+
+    function renderRoundEditor() {
+      roundEditorRows.innerHTML = "";
+      rounds.forEach((round, index) => {
+        const row = document.createElement("div");
+        row.className = "round-row";
+        row.innerHTML = `
+          <input aria-label="Round name" value="">
+          <input aria-label="Games done" type="number" inputmode="numeric" min="0" value="${Number(round.done) || 0}">
+          <input aria-label="Games total" type="number" inputmode="numeric" min="0" value="${Number(round.total) || 0}">
+          <button type="button" aria-label="Mark current round" aria-pressed="${round.current ? "true" : "false"}">*</button>
+        `;
+        row.querySelector("input").value = round.name || "";
+        row.querySelector("button").addEventListener("click", () => {
+          roundEditorRows.querySelectorAll("button").forEach((button) => button.setAttribute("aria-pressed", "false"));
+          row.querySelector("button").setAttribute("aria-pressed", "true");
+        });
+        roundEditorRows.appendChild(row);
+      });
+    }
+
+    function saveRoundsFromEditor() {
+      rounds = [...roundEditorRows.children].map((row) => {
+        const inputs = row.querySelectorAll("input");
+        return {
+          name: inputs[0].value.trim() || "Round",
+          done: Number(inputs[1].value) || 0,
+          total: Number(inputs[2].value) || 0,
+          current: row.querySelector("button").getAttribute("aria-pressed") === "true"
+        };
+      });
+      if (!rounds.some((round) => round.current) && rounds.length) {
+        rounds[0].current = true;
+      }
+      persistState();
+      syncUrlToState();
+      roundsDialog.close();
+      render();
+      flashHint("Rounds saved.");
+    }
+
+    function encodedState() {
+      return encodeURIComponent(btoa(JSON.stringify({ players, rounds })));
+    }
+
+    function makeShareUrl() {
+      return `${location.origin}${location.pathname}?state=${encodedState()}`;
+    }
+
+    function setAdmin(nextAdmin) {
+      isAdmin = nextAdmin;
+      document.body.dataset.admin = String(isAdmin);
+      toolbar.classList.toggle("viewer", !isAdmin);
+      sessionStorage.setItem("shalmoni-scoreboard-admin", String(isAdmin));
+      hint.textContent = isAdmin
+        ? "ADMIN MODE: edit scores or rounds, then share the viewer link."
+        : "";
+    }
+
+    async function hashPassword(password) {
+      const bytes = new TextEncoder().encode(password);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", bytes);
+      return [...new Uint8Array(hashBuffer)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    document.querySelector("#keyButton").addEventListener("click", () => {
+      if (isAdmin) return;
+      passwordInput.value = "";
+      passwordError.textContent = "";
+      passwordDialog.showModal();
+      passwordInput.focus();
+    });
+
+    document.querySelector("#unlockButton").addEventListener("click", async () => {
+      const enteredHash = await hashPassword(passwordInput.value);
+      if (enteredHash !== adminPasswordHash) {
+        passwordError.textContent = "Wrong password.";
+        passwordInput.select();
+        return;
+      }
+      setAdmin(true);
+      passwordDialog.close();
+    });
+
+    passwordInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.querySelector("#unlockButton").click();
+      }
+    });
+
+    document.querySelector("#passwordCancelButton").addEventListener("click", () => passwordDialog.close());
+
+    document.querySelector("#editButton").addEventListener("click", () => {
+      renderEditor();
+      editorDialog.showModal();
+    });
+
+    document.querySelector("#roundsButton").addEventListener("click", () => {
+      renderRoundEditor();
+      roundsDialog.showModal();
+    });
+
+    document.querySelector("#exitAdminButton").addEventListener("click", () => {
+      setAdmin(false);
+    });
+
+    document.querySelector("#addButton").addEventListener("click", () => addEditorRow());
+    document.querySelector("#saveButton").addEventListener("click", saveFromEditor);
+    document.querySelector("#cancelButton").addEventListener("click", () => editorDialog.close());
+    document.querySelector("#saveRoundsButton").addEventListener("click", saveRoundsFromEditor);
+    document.querySelector("#cancelRoundsButton").addEventListener("click", () => roundsDialog.close());
+
+    document.querySelector("#copyButton").addEventListener("click", async () => {
+      const url = makeShareUrl();
+      await navigator.clipboard.writeText(url);
+      document.querySelector("#copyButton").textContent = "Copied";
+      setTimeout(() => document.querySelector("#copyButton").textContent = "Share link", 1200);
+    });
+
+    render();
+  </script>
+</body>
+</html>
