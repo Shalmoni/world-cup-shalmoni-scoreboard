@@ -748,7 +748,7 @@
         flashHint("Publishing to GitHub...");
         await publishToGitHub(token);
         setAdmin(false);
-        hint.textContent = "Published. GitHub Pages may take a minute to refresh.";
+        hint.textContent = "Published.";
       } catch (error) {
         sessionStorage.removeItem("shalmoni-github-token");
         publishError.textContent = "Publish failed. Enter token again.";
@@ -815,7 +815,7 @@
         await publishToGitHub(token);
         publishDialog.close();
         setAdmin(false);
-        hint.textContent = "Published. GitHub Pages may take a minute to refresh.";
+        hint.textContent = "Published.";
       } catch (error) {
         sessionStorage.removeItem("shalmoni-github-token");
         publishError.textContent = "Publish failed. Check token permissions.";
