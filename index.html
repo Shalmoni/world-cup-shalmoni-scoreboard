@@ -253,6 +253,7 @@
     .breakdown {
       display: none;
       gap: 6px;
+      grid-column: 2 / 4;
       color: var(--accent);
       font-size: .82rem;
       font-weight: 850;
@@ -666,13 +667,13 @@
           <div class="rank">${rank}</div>
           <div class="name">
             <span class="player-name"></span>
-            <span class="breakdown">
-              <span>★ ${Number(player.stars) || 0}</span>
-              <span>✓ ${Number(player.correct) || 0}</span>
-              <span>× ${Number(player.wrong) || 0}</span>
-            </span>
           </div>
           <div class="score">${points}<span class="points">points</span></div>
+          <div class="breakdown">
+            <span>★ ${Number(player.stars) || 0}</span>
+            <span>✓ ${Number(player.correct) || 0}</span>
+            <span>× ${Number(player.wrong) || 0}</span>
+          </div>
         `;
         item.querySelector(".player-name").textContent = player.name || "Unnamed";
         item.addEventListener("click", () => item.classList.toggle("open"));
