@@ -251,12 +251,16 @@
     }
 
     .breakdown {
-      display: flex;
+      display: none;
       gap: 6px;
       color: var(--accent);
       font-size: .82rem;
       font-weight: 850;
       text-transform: uppercase;
+    }
+
+    .player.open .breakdown {
+      display: flex;
     }
 
     .breakdown span {
@@ -671,6 +675,14 @@
           <div class="score">${points}<span class="points">points</span></div>
         `;
         item.querySelector(".player-name").textContent = player.name || "Unnamed";
+        item.addEventListener("click", () => item.classList.toggle("open"));
+        item.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            item.classList.toggle("open");
+          }
+        });
+        item.tabIndex = 0;
         scoreboard.appendChild(item);
       });
     }
