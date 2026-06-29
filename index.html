@@ -577,12 +577,12 @@
       renderRounds();
       scoreboard.innerHTML = "";
       let previousPoints = null;
-      let previousRank = 0;
+      let currentRank = 0;
       sortedPlayers().forEach((player, index) => {
         const points = Number(player.points) || 0;
-        const rank = points === previousPoints ? previousRank : index + 1;
+        if (points !== previousPoints) currentRank += 1;
+        const rank = currentRank;
         previousPoints = points;
-        previousRank = rank;
         const item = document.createElement("article");
         item.className = `player${rank === 1 ? " first-place" : ""}${rank === 2 ? " top-two" : ""}${rank === 3 ? " top-three" : ""}`;
         item.innerHTML = `
