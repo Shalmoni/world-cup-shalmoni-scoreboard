@@ -250,16 +250,20 @@
     }
 
     .breakdown {
-      display: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
       grid-column: 2 / 4;
-      color: var(--dim);
-      font-size: .78rem;
+      color: var(--accent);
+      font-size: .82rem;
       font-weight: 850;
       text-transform: uppercase;
     }
 
-    .player.open .breakdown {
-      display: block;
+    .breakdown span {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
     }
 
     .score {
@@ -652,18 +656,14 @@
           <div class="rank">${rank}</div>
           <div class="name"><span class="player-name"></span><span class="played"></span></div>
           <div class="score">${points}<span class="points">points</span></div>
-          <div class="breakdown">★ ${Number(player.stars) || 0} / correct ${Number(player.correct) || 0} / wrong ${Number(player.wrong) || 0}</div>
+          <div class="breakdown">
+            <span>★ ${Number(player.stars) || 0}</span>
+            <span>✓ ${Number(player.correct) || 0}</span>
+            <span>× ${Number(player.wrong) || 0}</span>
+          </div>
         `;
         item.querySelector(".player-name").textContent = player.name || "Unnamed";
         item.querySelector(".played").textContent = `${Number(player.voted) || 0} voted`;
-        item.addEventListener("click", () => item.classList.toggle("open"));
-        item.addEventListener("keydown", (event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            item.classList.toggle("open");
-          }
-        });
-        item.tabIndex = 0;
         scoreboard.appendChild(item);
       });
     }
