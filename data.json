@@ -2,51 +2,51 @@
   "players": [
     {
       "name": "Otsar",
-      "voted": 2,
       "stars": 1,
-      "correct": 1
+      "correct": 1,
+      "wrong": 0
     },
     {
       "name": "Coral",
-      "voted": 2,
       "stars": 0,
-      "correct": 1
+      "correct": 1,
+      "wrong": 1
     },
     {
       "name": "David",
-      "voted": 2,
       "stars": 0,
-      "correct": 2
+      "correct": 2,
+      "wrong": 0
     },
     {
       "name": "Yosef",
-      "voted": 2,
       "stars": 2,
-      "correct": 0
+      "correct": 0,
+      "wrong": 0
     },
     {
       "name": "Shira",
-      "voted": 2,
       "stars": 2,
-      "correct": 0
+      "correct": 0,
+      "wrong": 0
     },
     {
       "name": "Yonatan",
-      "voted": 2,
       "stars": 1,
-      "correct": 1
+      "correct": 1,
+      "wrong": 0
     },
     {
       "name": "Iris",
-      "voted": 0,
       "stars": 0,
-      "correct": 0
+      "correct": 0,
+      "wrong": 0
     },
     {
       "name": "Becky",
-      "voted": 1,
       "stars": 0,
-      "correct": 0
+      "correct": 0,
+      "wrong": 1
     }
   ],
   "rounds": [

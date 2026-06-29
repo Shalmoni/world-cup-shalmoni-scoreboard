@@ -494,14 +494,14 @@
     const adminPasswordHash = "54b88770a73edab54dadce46b7062c166b046ef57dd58a9953685a72ea541f9b";
     const githubDispatchUrl = "https://api.github.com/repos/Shalmoni/world-cup-shalmoni-scoreboard/dispatches";
     const starterPlayers = [
-      { name: "Otsar", voted: 0, stars: 2, correct: 0 },
-      { name: "Coral", voted: 0, stars: 4, correct: 0 },
-      { name: "David", voted: 0, stars: 0, correct: 0 },
-      { name: "Yosef", voted: 0, stars: 0, correct: 0 },
-      { name: "Shira", voted: 0, stars: 0, correct: 0 },
-      { name: "Yonatan", voted: 0, stars: 0, correct: 0 },
-      { name: "Iris", voted: 0, stars: 0, correct: 0 },
-      { name: "Becky", voted: 0, stars: 0, correct: 0 }
+      { name: "Otsar", stars: 2, correct: 0, wrong: 0 },
+      { name: "Coral", stars: 4, correct: 0, wrong: 0 },
+      { name: "David", stars: 0, correct: 0, wrong: 0 },
+      { name: "Yosef", stars: 0, correct: 0, wrong: 0 },
+      { name: "Shira", stars: 0, correct: 0, wrong: 0 },
+      { name: "Yonatan", stars: 0, correct: 0, wrong: 0 },
+      { name: "Iris", stars: 0, correct: 0, wrong: 0 },
+      { name: "Becky", stars: 0, correct: 0, wrong: 0 }
     ];
 
     const starterRounds = [
@@ -594,11 +594,14 @@
       const voted = Number(player.voted ?? player.played) || 0;
       const stars = Number(player.stars) || 0;
       const correct = Number(player.correct) || 0;
+      const wrong = player.wrong === undefined
+        ? Math.max(voted - stars - correct, 0)
+        : Number(player.wrong) || 0;
       return {
         name: player.name || "Unnamed",
-        voted,
         stars,
         correct,
+        wrong,
         legacyPoints: hasOutcomes ? null : Number(player.points) || 0
       };
     }
@@ -628,20 +631,16 @@
       if (player.legacyPoints !== null && player.legacyPoints !== undefined) {
         return Number(player.legacyPoints) || 0;
       }
-      return (Number(player.stars) || 0) * 5 + (Number(player.correct) || 0) * 3 + derivedWrong(player);
-    }
-
-    function derivedWrong(player) {
-      return Math.max((Number(player.voted) || 0) - (Number(player.stars) || 0) - (Number(player.correct) || 0), 0);
+      return (Number(player.stars) || 0) * 5 + (Number(player.correct) || 0) * 3 + (Number(player.wrong) || 0);
     }
 
     function serializableState() {
       return {
         players: players.map((player) => ({
           name: player.name || "Unnamed",
-          voted: Number(player.voted) || 0,
           stars: Number(player.stars) || 0,
-          correct: Number(player.correct) || 0
+          correct: Number(player.correct) || 0,
+          wrong: Number(player.wrong) || 0
         })),
         rounds
       };
@@ -663,16 +662,15 @@
           <div class="rank">${rank}</div>
           <div class="name">
             <span class="player-name"></span>
-            <span class="played"></span>
             <span class="breakdown">
               <span>★ ${Number(player.stars) || 0}</span>
               <span>✓ ${Number(player.correct) || 0}</span>
+              <span>× ${Number(player.wrong) || 0}</span>
             </span>
           </div>
           <div class="score">${points}<span class="points">points</span></div>
         `;
         item.querySelector(".player-name").textContent = player.name || "Unnamed";
-        item.querySelector(".played").textContent = `${Number(player.voted) || 0} voted`;
         scoreboard.appendChild(item);
       });
     }
@@ -695,12 +693,12 @@
       editorRows.innerHTML = "";
       const labels = document.createElement("div");
       labels.className = "score-editor-labels";
-      labels.innerHTML = "<span>Name</span><span>Voted</span><span>Star</span><span>Correct</span><span></span>";
+      labels.innerHTML = "<span>Name</span><span>Star</span><span>Correct</span><span>Wrong</span><span></span>";
       editorRows.appendChild(labels);
       players.forEach((player, index) => addEditorRow(player, index));
     }
 
-    function addEditorRow(player = { name: "", voted: 0, stars: 0, correct: 0 }, index = editorRows.children.length) {
+    function addEditorRow(player = { name: "", stars: 0, correct: 0, wrong: 0 }, index = editorRows.children.length) {
       const row = document.createElement("div");
       row.className = "row";
       row.innerHTML = `
@@ -708,9 +706,9 @@
           <input aria-label="Name" value="">
           <button class="icon" type="button" aria-label="Remove person">×</button>
         </div>
-        <label class="field">Voted<input aria-label="Games voted" type="number" inputmode="numeric" min="0" value="${Number(player.voted) || 0}"></label>
         <label class="field">Star<input aria-label="Stars" type="number" inputmode="numeric" min="0" value="${Number(player.stars) || 0}"></label>
         <label class="field">Correct<input aria-label="Correct" type="number" inputmode="numeric" min="0" value="${Number(player.correct) || 0}"></label>
+        <label class="field">Wrong<input aria-label="Wrong" type="number" inputmode="numeric" min="0" value="${Number(player.wrong) || 0}"></label>
       `;
       row.querySelector("input").value = player.name || "";
       row.querySelector("button").addEventListener("click", () => {
@@ -725,9 +723,9 @@
         const inputs = row.querySelectorAll("input");
         return {
           name: inputs[0].value.trim() || "Unnamed",
-          voted: Number(inputs[1].value) || 0,
-          stars: Number(inputs[2].value) || 0,
-          correct: Number(inputs[3].value) || 0
+          stars: Number(inputs[1].value) || 0,
+          correct: Number(inputs[2].value) || 0,
+          wrong: Number(inputs[3].value) || 0
         };
       });
       persistState();
