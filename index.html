@@ -234,7 +234,8 @@
 
     .name {
       display: flex;
-      align-items: baseline;
+      align-items: center;
+      flex-wrap: wrap;
       gap: 8px;
       min-width: 0;
       overflow-wrap: anywhere;
@@ -251,19 +252,20 @@
 
     .breakdown {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      grid-column: 2 / 4;
+      gap: 4px;
       color: var(--accent);
-      font-size: .82rem;
+      font-size: .66rem;
       font-weight: 850;
       text-transform: uppercase;
     }
 
     .breakdown span {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
+      display: grid;
+      place-items: center;
+      min-width: 30px;
+      height: 26px;
+      padding: 0 4px;
+      border: 1px solid var(--accent);
     }
 
     .score {
@@ -654,13 +656,16 @@
         item.className = `player${rank === 1 ? " first-place" : ""}${rank === 2 ? " top-two" : ""}${rank === 3 ? " top-three" : ""}`;
         item.innerHTML = `
           <div class="rank">${rank}</div>
-          <div class="name"><span class="player-name"></span><span class="played"></span></div>
-          <div class="score">${points}<span class="points">points</span></div>
-          <div class="breakdown">
-            <span>★ ${Number(player.stars) || 0}</span>
-            <span>✓ ${Number(player.correct) || 0}</span>
-            <span>× ${Number(player.wrong) || 0}</span>
+          <div class="name">
+            <span class="player-name"></span>
+            <span class="played"></span>
+            <span class="breakdown">
+              <span>★ ${Number(player.stars) || 0}</span>
+              <span>✓ ${Number(player.correct) || 0}</span>
+              <span>× ${Number(player.wrong) || 0}</span>
+            </span>
           </div>
+          <div class="score">${points}<span class="points">points</span></div>
         `;
         item.querySelector(".player-name").textContent = player.name || "Unnamed";
         item.querySelector(".played").textContent = `${Number(player.voted) || 0} voted`;
