@@ -249,6 +249,19 @@
       font-weight: 850;
     }
 
+    .breakdown {
+      display: none;
+      grid-column: 2 / 4;
+      color: var(--dim);
+      font-size: .78rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .player.open .breakdown {
+      display: block;
+    }
+
     .score {
       min-width: 72px;
       text-align: right;
@@ -295,23 +308,29 @@
 
     .row {
       display: grid;
-      grid-template-columns: 1fr 68px 68px 44px;
-      gap: 8px;
+      grid-template-columns: minmax(58px, 1fr) repeat(4, 42px) 38px;
+      gap: 6px;
       align-items: center;
     }
 
     .score-editor-labels {
       display: grid;
-      grid-template-columns: 1fr 68px 68px 44px;
-      gap: 8px;
+      grid-template-columns: minmax(58px, 1fr) repeat(4, 42px) 38px;
+      gap: 6px;
       color: var(--dim);
-      font-size: .68rem;
+      font-size: .5rem;
       font-weight: 850;
       text-transform: uppercase;
     }
 
     .score-editor-labels span:not(:first-child) {
       text-align: center;
+    }
+
+    .row .icon {
+      width: 38px;
+      min-width: 0;
+      font-size: 1rem;
     }
 
     input {
@@ -453,14 +472,14 @@
     const adminPasswordHash = "54b88770a73edab54dadce46b7062c166b046ef57dd58a9953685a72ea541f9b";
     const githubDispatchUrl = "https://api.github.com/repos/Shalmoni/world-cup-shalmoni-scoreboard/dispatches";
     const starterPlayers = [
-      { name: "Otsar", points: 10, played: 0 },
-      { name: "Coral", points: 20, played: 0 },
-      { name: "David", points: 0, played: 0 },
-      { name: "Yosef", points: 0, played: 0 },
-      { name: "Shira", points: 0, played: 0 },
-      { name: "Yonatan", points: 0, played: 0 },
-      { name: "Iris", points: 0, played: 0 },
-      { name: "Becky", points: 0, played: 0 }
+      { name: "Otsar", voted: 0, stars: 2, correct: 0, wrong: 0 },
+      { name: "Coral", voted: 0, stars: 4, correct: 0, wrong: 0 },
+      { name: "David", voted: 0, stars: 0, correct: 0, wrong: 0 },
+      { name: "Yosef", voted: 0, stars: 0, correct: 0, wrong: 0 },
+      { name: "Shira", voted: 0, stars: 0, correct: 0, wrong: 0 },
+      { name: "Yonatan", voted: 0, stars: 0, correct: 0, wrong: 0 },
+      { name: "Iris", voted: 0, stars: 0, correct: 0, wrong: 0 },
+      { name: "Becky", voted: 0, stars: 0, correct: 0, wrong: 0 }
     ];
 
     const starterRounds = [
@@ -542,18 +561,26 @@
     function normalizeState(nextState) {
       return {
         players: Array.isArray(nextState.players)
-          ? nextState.players.map((player) => ({
-              name: player.name || "Unnamed",
-              points: Number(player.points) || 0,
-              played: Number(player.played) || 0
-            }))
+          ? nextState.players.map(normalizePlayer)
           : structuredClone(starterPlayers),
         rounds: Array.isArray(nextState.rounds) ? nextState.rounds : structuredClone(starterRounds)
       };
     }
 
+    function normalizePlayer(player) {
+      const hasOutcomes = ["stars", "correct", "wrong"].some((key) => player[key] !== undefined);
+      return {
+        name: player.name || "Unnamed",
+        voted: Number(player.voted ?? player.played) || 0,
+        stars: Number(player.stars) || 0,
+        correct: Number(player.correct) || 0,
+        wrong: Number(player.wrong) || 0,
+        legacyPoints: hasOutcomes ? null : Number(player.points) || 0
+      };
+    }
+
     function persistState() {
-      state = { players, rounds };
+      state = serializableState();
       localStorage.setItem("shalmoni-scoreboard-state", JSON.stringify(state));
     }
 
@@ -570,7 +597,27 @@
     }
 
     function sortedPlayers() {
-      return [...players].sort((a, b) => Number(b.points) - Number(a.points) || a.name.localeCompare(b.name));
+      return [...players].sort((a, b) => calculatePoints(b) - calculatePoints(a) || a.name.localeCompare(b.name));
+    }
+
+    function calculatePoints(player) {
+      if (player.legacyPoints !== null && player.legacyPoints !== undefined) {
+        return Number(player.legacyPoints) || 0;
+      }
+      return (Number(player.stars) || 0) * 5 + (Number(player.correct) || 0) * 3 + (Number(player.wrong) || 0);
+    }
+
+    function serializableState() {
+      return {
+        players: players.map((player) => ({
+          name: player.name || "Unnamed",
+          voted: Number(player.voted) || 0,
+          stars: Number(player.stars) || 0,
+          correct: Number(player.correct) || 0,
+          wrong: Number(player.wrong) || 0
+        })),
+        rounds
+      };
     }
 
     function render() {
@@ -579,7 +626,7 @@
       let previousPoints = null;
       let currentRank = 0;
       sortedPlayers().forEach((player, index) => {
-        const points = Number(player.points) || 0;
+        const points = calculatePoints(player);
         if (points !== previousPoints) currentRank += 1;
         const rank = currentRank;
         previousPoints = points;
@@ -589,9 +636,18 @@
           <div class="rank">${rank}</div>
           <div class="name"><span class="player-name"></span><span class="played"></span></div>
           <div class="score">${points}<span class="points">points</span></div>
+          <div class="breakdown">★ ${Number(player.stars) || 0} / correct ${Number(player.correct) || 0} / wrong ${Number(player.wrong) || 0}</div>
         `;
         item.querySelector(".player-name").textContent = player.name || "Unnamed";
-        item.querySelector(".played").textContent = `${Number(player.played) || 0} voted`;
+        item.querySelector(".played").textContent = `${Number(player.voted) || 0} voted`;
+        item.addEventListener("click", () => item.classList.toggle("open"));
+        item.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            item.classList.toggle("open");
+          }
+        });
+        item.tabIndex = 0;
         scoreboard.appendChild(item);
       });
     }
@@ -614,18 +670,20 @@
       editorRows.innerHTML = "";
       const labels = document.createElement("div");
       labels.className = "score-editor-labels";
-      labels.innerHTML = "<span>Name</span><span>Points</span><span>Voted</span><span></span>";
+      labels.innerHTML = "<span>Name</span><span>Voted</span><span>Star</span><span>Correct</span><span>Wrong</span><span></span>";
       editorRows.appendChild(labels);
       players.forEach((player, index) => addEditorRow(player, index));
     }
 
-    function addEditorRow(player = { name: "", points: 0, played: 0 }, index = editorRows.children.length) {
+    function addEditorRow(player = { name: "", voted: 0, stars: 0, correct: 0, wrong: 0 }, index = editorRows.children.length) {
       const row = document.createElement("div");
       row.className = "row";
       row.innerHTML = `
         <input aria-label="Name" value="">
-        <input aria-label="Points" type="number" inputmode="numeric" value="${Number(player.points) || 0}" placeholder="PTS">
-        <input aria-label="Games voted" type="number" inputmode="numeric" value="${Number(player.played) || 0}" placeholder="VOTED">
+        <input aria-label="Games voted" type="number" inputmode="numeric" min="0" value="${Number(player.voted) || 0}" placeholder="VOTED">
+        <input aria-label="Stars" type="number" inputmode="numeric" min="0" value="${Number(player.stars) || 0}" placeholder="STAR">
+        <input aria-label="Correct" type="number" inputmode="numeric" min="0" value="${Number(player.correct) || 0}" placeholder="OK">
+        <input aria-label="Wrong" type="number" inputmode="numeric" min="0" value="${Number(player.wrong) || 0}" placeholder="WRONG">
         <button class="icon" type="button" aria-label="Remove person">×</button>
       `;
       row.querySelector("input").value = player.name || "";
@@ -641,8 +699,10 @@
         const inputs = row.querySelectorAll("input");
         return {
           name: inputs[0].value.trim() || "Unnamed",
-          points: Number(inputs[1].value) || 0,
-          played: Number(inputs[2].value) || 0
+          voted: Number(inputs[1].value) || 0,
+          stars: Number(inputs[2].value) || 0,
+          correct: Number(inputs[3].value) || 0,
+          wrong: Number(inputs[4].value) || 0
         };
       });
       persistState();
@@ -693,7 +753,7 @@
     }
 
     function encodedState() {
-      return encodeURIComponent(btoa(JSON.stringify({ players, rounds })));
+      return encodeURIComponent(btoa(JSON.stringify(serializableState())));
     }
 
     function makeShareUrl() {
@@ -729,7 +789,7 @@
         body: JSON.stringify({
           event_type: "scoreboard-update",
           client_payload: {
-            state: { players, rounds }
+            state: serializableState()
           }
         })
       });
