@@ -308,28 +308,44 @@
 
     .row {
       display: grid;
-      grid-template-columns: minmax(58px, 1fr) repeat(4, 42px) 38px;
-      gap: 6px;
-      align-items: center;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      box-shadow: 3px 3px 0 var(--accent);
     }
 
     .score-editor-labels {
+      display: none;
+    }
+
+    .player-edit-head {
+      grid-column: 1 / -1;
       display: grid;
-      grid-template-columns: minmax(58px, 1fr) repeat(4, 42px) 38px;
-      gap: 6px;
+      grid-template-columns: minmax(0, 1fr) 38px;
+      gap: 8px;
+    }
+
+    .field {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
       color: var(--dim);
-      font-size: .5rem;
+      font-size: .58rem;
       font-weight: 850;
+      text-align: center;
       text-transform: uppercase;
     }
 
-    .score-editor-labels span:not(:first-child) {
+    .field input {
+      padding: 8px 4px;
       text-align: center;
     }
 
     .row .icon {
       width: 38px;
       min-width: 0;
+      min-height: 44px;
       font-size: 1rem;
     }
 
@@ -679,12 +695,14 @@
       const row = document.createElement("div");
       row.className = "row";
       row.innerHTML = `
-        <input aria-label="Name" value="">
-        <input aria-label="Games voted" type="number" inputmode="numeric" min="0" value="${Number(player.voted) || 0}" placeholder="VOTED">
-        <input aria-label="Stars" type="number" inputmode="numeric" min="0" value="${Number(player.stars) || 0}" placeholder="STAR">
-        <input aria-label="Correct" type="number" inputmode="numeric" min="0" value="${Number(player.correct) || 0}" placeholder="OK">
-        <input aria-label="Wrong" type="number" inputmode="numeric" min="0" value="${Number(player.wrong) || 0}" placeholder="WRONG">
-        <button class="icon" type="button" aria-label="Remove person">×</button>
+        <div class="player-edit-head">
+          <input aria-label="Name" value="">
+          <button class="icon" type="button" aria-label="Remove person">×</button>
+        </div>
+        <label class="field">Voted<input aria-label="Games voted" type="number" inputmode="numeric" min="0" value="${Number(player.voted) || 0}"></label>
+        <label class="field">Star<input aria-label="Stars" type="number" inputmode="numeric" min="0" value="${Number(player.stars) || 0}"></label>
+        <label class="field">Correct<input aria-label="Correct" type="number" inputmode="numeric" min="0" value="${Number(player.correct) || 0}"></label>
+        <label class="field">Wrong<input aria-label="Wrong" type="number" inputmode="numeric" min="0" value="${Number(player.wrong) || 0}"></label>
       `;
       row.querySelector("input").value = player.name || "";
       row.querySelector("button").addEventListener("click", () => {
