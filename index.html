@@ -216,7 +216,8 @@
       font-weight: 900;
     }
 
-    .player:first-child .rank {
+    .player:first-child .rank,
+    .player.first-place .rank {
       background: var(--accent);
       color: #000;
     }
@@ -575,13 +576,19 @@
     function render() {
       renderRounds();
       scoreboard.innerHTML = "";
+      let previousPoints = null;
+      let previousRank = 0;
       sortedPlayers().forEach((player, index) => {
+        const points = Number(player.points) || 0;
+        const rank = points === previousPoints ? previousRank : index + 1;
+        previousPoints = points;
+        previousRank = rank;
         const item = document.createElement("article");
-        item.className = `player${index === 1 ? " top-two" : ""}${index === 2 ? " top-three" : ""}`;
+        item.className = `player${rank === 1 ? " first-place" : ""}${rank === 2 ? " top-two" : ""}${rank === 3 ? " top-three" : ""}`;
         item.innerHTML = `
-          <div class="rank">${index + 1}</div>
+          <div class="rank">${rank}</div>
           <div class="name"><span class="player-name"></span><span class="played"></span></div>
-          <div class="score">${Number(player.points) || 0}<span class="points">points</span></div>
+          <div class="score">${points}<span class="points">points</span></div>
         `;
         item.querySelector(".player-name").textContent = player.name || "Unnamed";
         item.querySelector(".played").textContent = `${Number(player.played) || 0} voted`;
