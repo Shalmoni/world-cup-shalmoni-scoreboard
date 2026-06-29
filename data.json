@@ -1,51 +1,51 @@
 {
   "players": [
     {
+      "correct": 1,
       "name": "Otsar",
       "stars": 1,
-      "correct": 1,
       "wrong": 0
     },
     {
+      "correct": 1,
       "name": "Coral",
       "stars": 0,
-      "correct": 1,
       "wrong": 1
     },
     {
+      "correct": 2,
       "name": "David",
       "stars": 0,
-      "correct": 2,
       "wrong": 0
     },
     {
+      "correct": 0,
       "name": "Yosef",
       "stars": 2,
-      "correct": 0,
       "wrong": 0
     },
     {
+      "correct": 0,
       "name": "Shira",
       "stars": 2,
-      "correct": 0,
       "wrong": 0
     },
     {
+      "correct": 1,
       "name": "Yonatan",
       "stars": 1,
-      "correct": 1,
       "wrong": 0
     },
     {
+      "correct": 0,
       "name": "Iris",
       "stars": 0,
-      "correct": 0,
       "wrong": 0
     },
     {
+      "correct": 0,
       "name": "Becky",
       "stars": 0,
-      "correct": 0,
       "wrong": 1
     }
   ],
