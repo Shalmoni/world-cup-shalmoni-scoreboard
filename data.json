@@ -4,7 +4,7 @@
       "correct": 2,
       "name": "Otsar",
       "stars": 1,
-      "wrong": 1
+      "wrong": 2
     },
     {
       "correct": 1,
@@ -16,25 +16,25 @@
       "correct": 2,
       "name": "David",
       "stars": 0,
-      "wrong": 2
+      "wrong": 3
     },
     {
       "correct": 1,
       "name": "Yosef",
       "stars": 2,
-      "wrong": 1
+      "wrong": 2
     },
     {
       "correct": 0,
       "name": "Shira",
       "stars": 2,
-      "wrong": 2
+      "wrong": 3
     },
     {
       "correct": 1,
       "name": "Yonatan",
       "stars": 2,
-      "wrong": 1
+      "wrong": 2
     },
     {
       "correct": 0,
@@ -52,7 +52,7 @@
   "rounds": [
     {
       "current": true,
-      "done": 4,
+      "done": 5,
       "name": "Round of 32",
       "total": 16
     },
