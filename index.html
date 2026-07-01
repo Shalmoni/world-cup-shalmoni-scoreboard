@@ -14,6 +14,8 @@
       --line: #fff;
       --card: #000;
       --accent: #39ff14;
+      --yellow: #ffe84a;
+      --red: #ff3b30;
       --shadow: 8px 8px 0 #39ff14;
     }
 
@@ -36,7 +38,17 @@
     .topline {
       display: flex;
       justify-content: flex-end;
+      gap: 10px;
       min-height: 44px;
+    }
+
+    .view-button {
+      min-height: 42px;
+      padding: 0 12px;
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: none;
+      font-size: .88rem;
     }
 
     .key-button {
@@ -178,6 +190,91 @@
       gap: 10px;
     }
 
+    .view[hidden] {
+      display: none;
+    }
+
+    .match-table-wrap {
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+
+    .match-table {
+      display: grid;
+      grid-template-columns: minmax(156px, 1.8fr) repeat(8, 46px);
+      gap: 4px;
+      min-width: 540px;
+      text-transform: uppercase;
+    }
+
+    .match-head,
+    .match-game,
+    .match-cell {
+      border: 1px solid var(--line);
+      background: #000;
+    }
+
+    .match-head {
+      display: grid;
+      place-items: center;
+      min-height: 34px;
+      color: var(--dim);
+      font-size: .66rem;
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .match-game {
+      display: grid;
+      gap: 4px;
+      min-height: 52px;
+      padding: 8px;
+    }
+
+    .match-title {
+      color: var(--ink);
+      font-size: .78rem;
+      font-weight: 900;
+    }
+
+    .match-score {
+      color: var(--accent);
+      font-size: .72rem;
+      font-weight: 850;
+    }
+
+    .match-cell {
+      display: grid;
+      place-items: center;
+      min-height: 52px;
+      color: var(--dim);
+      font-size: 1.1rem;
+      font-weight: 950;
+      box-shadow: none;
+    }
+
+    .outcome-perfect,
+    .match-cell.perfect {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .outcome-correct,
+    .match-cell.correct {
+      color: var(--yellow);
+      border-color: var(--yellow);
+    }
+
+    .outcome-wrong,
+    .match-cell.wrong {
+      color: var(--red);
+      border-color: var(--red);
+    }
+
+    body[data-admin="true"] .match-cell {
+      cursor: pointer;
+    }
+
     .player {
       display: grid;
       grid-template-columns: 46px 1fr auto;
@@ -270,7 +367,7 @@
       min-width: 40px;
       height: 34px;
       padding: 0 6px;
-      border: 1px solid var(--accent);
+      border: 1px solid currentColor;
     }
 
     .score {
@@ -446,6 +543,7 @@
 <body>
   <main>
     <div class="topline">
+      <button class="view-button" id="viewToggleButton" type="button">Table</button>
       <button class="key-button" id="keyButton" type="button" title="Admin access" aria-label="Admin access">⚿</button>
     </div>
 
@@ -456,13 +554,20 @@
     </header>
 
     <section class="toolbar admin-only" aria-label="Scoreboard controls">
-      <button class="primary admin-only" id="editButton" type="button">Edit scores</button>
+      <button class="primary admin-only" id="editButton" type="button">Edit table</button>
       <button class="primary admin-only" id="roundsButton" type="button">Edit rounds</button>
-      <button class="link-button admin-only" id="copyButton" type="button" title="Copy viewer link" aria-label="Copy viewer link">Share link</button>
+      <button class="link-button admin-only" id="publishAdminButton" type="button">Publish</button>
       <button class="link-button admin-only" id="exitAdminButton" type="button">Exit admin</button>
     </section>
 
-    <section class="scoreboard" id="scoreboard" aria-live="polite"></section>
+    <section class="view" id="scoreboardView">
+      <section class="scoreboard" id="scoreboard" aria-live="polite"></section>
+    </section>
+    <section class="view" id="tableView" hidden>
+      <div class="match-table-wrap">
+        <div class="match-table" id="matchTable" aria-label="Round of 32 prediction table"></div>
+      </div>
+    </section>
     <p class="hint" id="hint"></p>
   </main>
 
@@ -536,7 +641,111 @@
       { name: "Finals", done: 0, total: 1, current: false }
     ];
 
+    const playerNames = ["Otsar", "Coral", "David", "Yosef", "Shira", "Yonatan", "Iris", "Becky"];
+    const starterMatches = [
+      {
+        id: "sa-canada",
+        label: "SA v Canada",
+        score: "Canada 1-0, RT",
+        outcomes: { Otsar: "perfect", Shira: "perfect", Yosef: "perfect", Yonatan: "correct", David: "wrong", Becky: "wrong", Coral: "wrong" }
+      },
+      {
+        id: "brazil-japan",
+        label: "Brazil v Japan",
+        score: "Brazil 2-1, RT",
+        outcomes: { David: "perfect", Yosef: "perfect", Shira: "perfect", Yonatan: "perfect", Otsar: "correct", Coral: "correct" }
+      },
+      {
+        id: "germany-paraguay",
+        label: "Germany v Paraguay",
+        score: "1-1, Paraguay 4-3 pens",
+        outcomes: { Otsar: "wrong", Coral: "wrong", David: "wrong", Yosef: "wrong", Shira: "wrong", Yonatan: "wrong" }
+      },
+      {
+        id: "netherlands-morocco",
+        label: "Netherlands v Morocco",
+        score: "1-1, Morocco 3-2 pens",
+        outcomes: { Yonatan: "perfect", Otsar: "correct", Yosef: "correct", David: "wrong", Coral: "wrong", Shira: "wrong" }
+      },
+      {
+        id: "ivory-norway",
+        label: "Ivory Coast v Norway",
+        score: "Norway 2-1, RT",
+        outcomes: { Otsar: "perfect", David: "perfect", Yosef: "perfect", Shira: "perfect", Yonatan: "perfect" }
+      },
+      {
+        id: "france-sweden",
+        label: "France v Sweden",
+        score: "France 3-0, RT",
+        outcomes: { Otsar: "perfect", Yosef: "perfect", Shira: "perfect", Yonatan: "perfect", Coral: "wrong", David: "wrong" }
+      },
+      {
+        id: "mexico-ecuador",
+        label: "Mexico v Ecuador",
+        score: "Mexico 2-0, RT",
+        outcomes: { Otsar: "perfect", Coral: "perfect", David: "perfect", Yosef: "perfect", Shira: "perfect", Yonatan: "correct" }
+      },
+      {
+        id: "england-dr-congo",
+        label: "England v DR Congo",
+        score: "Upcoming",
+        outcomes: {}
+      },
+      {
+        id: "belgium-senegal",
+        label: "Belgium v Senegal",
+        score: "Upcoming",
+        outcomes: {}
+      },
+      {
+        id: "usa-bosnia",
+        label: "USA v Bosnia",
+        score: "Upcoming",
+        outcomes: {}
+      },
+      {
+        id: "spain-austria",
+        label: "Spain v Austria",
+        score: "Upcoming",
+        outcomes: {}
+      },
+      {
+        id: "portugal-croatia",
+        label: "Portugal v Croatia",
+        score: "Upcoming",
+        outcomes: {}
+      },
+      {
+        id: "switzerland-algeria",
+        label: "Switzerland v Algeria",
+        score: "Upcoming",
+        outcomes: {}
+      },
+      {
+        id: "australia-egypt",
+        label: "Australia v Egypt",
+        score: "Upcoming",
+        outcomes: {}
+      },
+      {
+        id: "argentina-cabo-verde",
+        label: "Argentina v Cabo Verde",
+        score: "Upcoming",
+        outcomes: {}
+      },
+      {
+        id: "colombia-ghana",
+        label: "Colombia v Ghana",
+        score: "Upcoming",
+        outcomes: {}
+      }
+    ];
+
     const scoreboard = document.querySelector("#scoreboard");
+    const scoreboardView = document.querySelector("#scoreboardView");
+    const tableView = document.querySelector("#tableView");
+    const matchTable = document.querySelector("#matchTable");
+    const viewToggleButton = document.querySelector("#viewToggleButton");
     const roundsList = document.querySelector("#rounds");
     const editorDialog = document.querySelector("#editorDialog");
     const editorRows = document.querySelector("#editorRows");
@@ -556,6 +765,8 @@
     let state = loadState();
     let players = state.players;
     let rounds = state.rounds;
+    let matches = state.matches;
+    let activeView = "scoreboard";
 
     setAdmin(isAdmin);
     loadPublishedState();
@@ -589,6 +800,7 @@
         const publishedState = normalizeState(await response.json());
         players = publishedState.players;
         rounds = publishedState.rounds;
+        matches = publishedState.matches;
         persistState();
         render();
       } catch {
@@ -599,7 +811,8 @@
     function defaultState() {
       return {
         players: structuredClone(starterPlayers),
-        rounds: structuredClone(starterRounds)
+        rounds: structuredClone(starterRounds),
+        matches: structuredClone(starterMatches)
       };
     }
 
@@ -608,7 +821,17 @@
         players: Array.isArray(nextState.players)
           ? nextState.players.map(normalizePlayer)
           : structuredClone(starterPlayers),
-        rounds: Array.isArray(nextState.rounds) ? nextState.rounds : structuredClone(starterRounds)
+        rounds: Array.isArray(nextState.rounds) ? nextState.rounds : structuredClone(starterRounds),
+        matches: Array.isArray(nextState.matches) ? nextState.matches.map(normalizeMatch) : structuredClone(starterMatches)
+      };
+    }
+
+    function normalizeMatch(match) {
+      return {
+        id: match.id || crypto.randomUUID(),
+        label: match.label || "Match",
+        score: match.score || "",
+        outcomes: { ...(match.outcomes || {}) }
       };
     }
 
@@ -665,12 +888,14 @@
           correct: Number(player.correct) || 0,
           wrong: Number(player.wrong) || 0
         })),
-        rounds
+        rounds,
+        matches
       };
     }
 
     function render() {
       renderRounds();
+      renderMatchTable();
       scoreboard.innerHTML = "";
       let previousPoints = null;
       let currentRank = 0;
@@ -688,9 +913,9 @@
           </div>
           <div class="score">${points}<span class="points">points</span></div>
           <div class="breakdown">
-            <span>★ ${Number(player.stars) || 0}</span>
-            <span>✓ ${Number(player.correct) || 0}</span>
-            <span>× ${Number(player.wrong) || 0}</span>
+            <span class="outcome-perfect">★ ${Number(player.stars) || 0}</span>
+            <span class="outcome-correct">✓ ${Number(player.correct) || 0}</span>
+            <span class="outcome-wrong">× ${Number(player.wrong) || 0}</span>
           </div>
         `;
         item.querySelector(".player-name").textContent = player.name || "Unnamed";
@@ -704,6 +929,84 @@
         item.tabIndex = 0;
         scoreboard.appendChild(item);
       });
+    }
+
+    function renderMatchTable() {
+      matchTable.innerHTML = "";
+      addMatchNode("match-head", "Game");
+      playerNames.forEach((name) => addMatchNode("match-head", name));
+      matches.forEach((match, matchIndex) => {
+        const game = document.createElement("div");
+        game.className = "match-game";
+        game.innerHTML = `<span class="match-title"></span><span class="match-score"></span>`;
+        game.querySelector(".match-title").textContent = match.label;
+        game.querySelector(".match-score").textContent = match.score;
+        matchTable.appendChild(game);
+
+        playerNames.forEach((playerName) => {
+          const outcome = match.outcomes[playerName] || "";
+          const cell = document.createElement("button");
+          cell.type = "button";
+          cell.className = `match-cell ${outcome}`;
+          cell.textContent = outcomeSymbol(outcome);
+          cell.title = `${playerName}: ${match.label}`;
+          cell.setAttribute("aria-label", `${playerName}, ${match.label}, ${outcome || "not played"}`);
+          cell.addEventListener("click", () => {
+            if (isAdmin) {
+              match.outcomes[playerName] = nextOutcome(outcome);
+              recalculatePlayersFromMatches();
+              persistState();
+              render();
+              return;
+            }
+            flashHint(`${playerName} / ${match.label}: ${outcomeLabel(outcome)} (${outcomePoints(outcome)} pts). Final: ${match.score}`);
+          });
+          matchTable.appendChild(cell);
+        });
+      });
+    }
+
+    function addMatchNode(className, text) {
+      const node = document.createElement("div");
+      node.className = className;
+      node.textContent = text;
+      matchTable.appendChild(node);
+    }
+
+    function outcomeSymbol(outcome) {
+      return { perfect: "★", correct: "✓", wrong: "×" }[outcome] || "";
+    }
+
+    function outcomeLabel(outcome) {
+      return { perfect: "Perfect", correct: "Correct", wrong: "Wrong" }[outcome] || "No pick";
+    }
+
+    function outcomePoints(outcome) {
+      return { perfect: 5, correct: 3, wrong: 1 }[outcome] || 0;
+    }
+
+    function nextOutcome(outcome) {
+      return { "": "perfect", perfect: "correct", correct: "wrong", wrong: "" }[outcome || ""];
+    }
+
+    function recalculatePlayersFromMatches() {
+      players = playerNames.map((name) => {
+        const totals = { name, stars: 0, correct: 0, wrong: 0 };
+        matches.forEach((match) => {
+          const outcome = match.outcomes[name];
+          if (outcome === "perfect") totals.stars += 1;
+          if (outcome === "correct") totals.correct += 1;
+          if (outcome === "wrong") totals.wrong += 1;
+        });
+        return totals;
+      });
+    }
+
+    function switchView(nextView) {
+      activeView = nextView;
+      scoreboardView.hidden = activeView !== "scoreboard";
+      tableView.hidden = activeView !== "table";
+      viewToggleButton.textContent = activeView === "scoreboard" ? "Table" : "Scores";
     }
 
     function renderRounds() {
@@ -912,9 +1215,13 @@
 
     document.querySelector("#passwordCancelButton").addEventListener("click", () => passwordDialog.close());
 
+    viewToggleButton.addEventListener("click", () => {
+      switchView(activeView === "scoreboard" ? "table" : "scoreboard");
+    });
+
     document.querySelector("#editButton").addEventListener("click", () => {
-      renderEditor();
-      editorDialog.showModal();
+      switchView("table");
+      flashHint("ADMIN TABLE MODE: tap cells to cycle star, check, X, blank.");
     });
 
     document.querySelector("#roundsButton").addEventListener("click", () => {
@@ -923,6 +1230,10 @@
     });
 
     document.querySelector("#exitAdminButton").addEventListener("click", () => {
+      setAdmin(false);
+    });
+
+    document.querySelector("#publishAdminButton").addEventListener("click", () => {
       exitAdminAndPublish();
     });
 
@@ -951,13 +1262,6 @@
     });
 
     document.querySelector("#publishCancelButton").addEventListener("click", () => publishDialog.close());
-
-    document.querySelector("#copyButton").addEventListener("click", async () => {
-      const url = makeShareUrl();
-      await navigator.clipboard.writeText(url);
-      document.querySelector("#copyButton").textContent = "Copied";
-      setTimeout(() => document.querySelector("#copyButton").textContent = "Share link", 1200);
-    });
 
     render();
   </script>
