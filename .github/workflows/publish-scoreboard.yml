@@ -23,7 +23,8 @@ jobs:
 
             const content = JSON.stringify({
               players: state.players,
-              rounds: state.rounds
+              rounds: state.rounds,
+              matches: Array.isArray(state.matches) ? state.matches : []
             }, null, 2) + "\n";
 
             let sha;

@@ -953,8 +953,9 @@
           cell.setAttribute("aria-label", `${playerName}, ${match.label}, ${outcome || "not played"}`);
           cell.addEventListener("click", () => {
             if (isAdmin) {
-              match.outcomes[playerName] = nextOutcome(outcome);
-              recalculatePlayersFromMatches();
+              const next = nextOutcome(outcome);
+              match.outcomes[playerName] = next;
+              applyOutcomeDelta(playerName, outcome, next);
               persistState();
               render();
               return;
@@ -987,6 +988,22 @@
 
     function nextOutcome(outcome) {
       return { "": "perfect", perfect: "correct", correct: "wrong", wrong: "" }[outcome || ""];
+    }
+
+    function applyOutcomeDelta(playerName, previousOutcome, nextOutcomeValue) {
+      let player = players.find((entry) => entry.name === playerName);
+      if (!player) {
+        player = { name: playerName, stars: 0, correct: 0, wrong: 0 };
+        players.push(player);
+      }
+      updateOutcomeCount(player, previousOutcome, -1);
+      updateOutcomeCount(player, nextOutcomeValue, 1);
+    }
+
+    function updateOutcomeCount(player, outcome, delta) {
+      const key = { perfect: "stars", correct: "correct", wrong: "wrong" }[outcome];
+      if (!key) return;
+      player[key] = Math.max(0, (Number(player[key]) || 0) + delta);
     }
 
     function recalculatePlayersFromMatches() {
