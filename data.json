@@ -183,7 +183,14 @@
       "id": "england-dr-congo",
       "label": "England v DR Congo",
       "score": "Upcoming",
-      "outcomes": {}
+      "outcomes": {
+        "Otsar": "perfect",
+        "Yosef": "perfect",
+        "Shira": "perfect",
+        "Yonatan": "perfect",
+        "David": "correct",
+        "Coral": "correct"
+      }
     },
     {
       "id": "belgium-senegal",
