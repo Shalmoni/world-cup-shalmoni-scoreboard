@@ -3,11 +3,11 @@
     {
       "correct": 2,
       "name": "Otsar",
-      "stars": 5,
+      "stars": 7,
       "wrong": 1
     },
     {
-      "correct": 2,
+      "correct": 4,
       "name": "Coral",
       "stars": 1,
       "wrong": 4
@@ -15,25 +15,25 @@
     {
       "correct": 1,
       "name": "David",
-      "stars": 3,
+      "stars": 5,
       "wrong": 4
     },
     {
-      "correct": 1,
+      "correct": 2,
       "name": "Yosef",
-      "stars": 6,
+      "stars": 7,
       "wrong": 1
     },
     {
       "correct": 0,
       "name": "Shira",
-      "stars": 6,
+      "stars": 8,
       "wrong": 2
     },
     {
       "correct": 2,
       "name": "Yonatan",
-      "stars": 5,
+      "stars": 7,
       "wrong": 1
     },
     {
@@ -91,154 +91,168 @@
     {
       "id": "sa-canada",
       "label": "SA v Canada",
-      "score": "Canada 1-0, RT",
       "outcomes": {
+        "Becky": "wrong",
+        "Coral": "wrong",
+        "David": "wrong",
         "Otsar": "perfect",
         "Shira": "perfect",
-        "Yosef": "perfect",
         "Yonatan": "correct",
-        "David": "wrong",
-        "Becky": "wrong",
-        "Coral": "wrong"
-      }
+        "Yosef": "perfect"
+      },
+      "score": "Canada 1-0, RT"
     },
     {
       "id": "brazil-japan",
       "label": "Brazil v Japan",
-      "score": "Brazil 2-1, RT",
       "outcomes": {
+        "Coral": "correct",
         "David": "perfect",
-        "Yosef": "perfect",
+        "Otsar": "correct",
         "Shira": "perfect",
         "Yonatan": "perfect",
-        "Otsar": "correct",
-        "Coral": "correct"
-      }
+        "Yosef": "perfect"
+      },
+      "score": "Brazil 2-1, RT"
     },
     {
       "id": "germany-paraguay",
       "label": "Germany v Paraguay",
-      "score": "1-1, Paraguay 4-3 pens",
       "outcomes": {
-        "Otsar": "wrong",
         "Coral": "wrong",
         "David": "wrong",
-        "Yosef": "wrong",
+        "Otsar": "wrong",
         "Shira": "wrong",
-        "Yonatan": "wrong"
-      }
+        "Yonatan": "wrong",
+        "Yosef": "wrong"
+      },
+      "score": "1-1, Paraguay 4-3 pens"
     },
     {
       "id": "netherlands-morocco",
       "label": "Netherlands v Morocco",
-      "score": "1-1, Morocco 3-2 pens",
       "outcomes": {
-        "Yonatan": "perfect",
-        "Otsar": "correct",
-        "Yosef": "correct",
-        "David": "wrong",
         "Coral": "wrong",
-        "Shira": "wrong"
-      }
+        "David": "wrong",
+        "Otsar": "correct",
+        "Shira": "wrong",
+        "Yonatan": "perfect",
+        "Yosef": "correct"
+      },
+      "score": "1-1, Morocco 3-2 pens"
     },
     {
       "id": "ivory-norway",
       "label": "Ivory Coast v Norway",
-      "score": "Norway 2-1, RT",
       "outcomes": {
-        "Otsar": "perfect",
         "David": "perfect",
-        "Yosef": "perfect",
+        "Otsar": "perfect",
         "Shira": "perfect",
-        "Yonatan": "perfect"
-      }
+        "Yonatan": "perfect",
+        "Yosef": "perfect"
+      },
+      "score": "Norway 2-1, RT"
     },
     {
       "id": "france-sweden",
       "label": "France v Sweden",
-      "score": "France 3-0, RT",
       "outcomes": {
+        "Coral": "wrong",
+        "David": "wrong",
         "Otsar": "perfect",
-        "Yosef": "perfect",
         "Shira": "perfect",
         "Yonatan": "perfect",
-        "Coral": "wrong",
-        "David": "wrong"
-      }
+        "Yosef": "perfect"
+      },
+      "score": "France 3-0, RT"
     },
     {
       "id": "mexico-ecuador",
       "label": "Mexico v Ecuador",
-      "score": "Mexico 2-0, RT",
       "outcomes": {
-        "Otsar": "perfect",
         "Coral": "perfect",
         "David": "perfect",
-        "Yosef": "perfect",
+        "Otsar": "perfect",
         "Shira": "perfect",
-        "Yonatan": "correct"
-      }
+        "Yonatan": "correct",
+        "Yosef": "perfect"
+      },
+      "score": "Mexico 2-0, RT"
     },
     {
       "id": "england-dr-congo",
       "label": "England v DR Congo",
-      "score": "Upcoming",
       "outcomes": {
+        "Coral": "correct",
+        "David": "correct",
         "Otsar": "perfect",
-        "Yosef": "perfect",
         "Shira": "perfect",
         "Yonatan": "perfect",
-        "David": "correct",
-        "Coral": "correct"
-      }
+        "Yosef": "perfect"
+      },
+      "score": "Upcoming"
     },
     {
       "id": "belgium-senegal",
       "label": "Belgium v Senegal",
-      "score": "Upcoming",
-      "outcomes": {}
+      "outcomes": {
+        "Coral": "correct",
+        "David": "perfect",
+        "Otsar": "perfect",
+        "Shira": "perfect",
+        "Yonatan": "perfect",
+        "Yosef": "correct"
+      },
+      "score": "Upcoming"
     },
     {
       "id": "usa-bosnia",
       "label": "USA v Bosnia",
-      "score": "Upcoming",
-      "outcomes": {}
+      "outcomes": {
+        "Coral": "correct",
+        "David": "perfect",
+        "Otsar": "perfect",
+        "Shira": "perfect",
+        "Yonatan": "perfect",
+        "Yosef": "perfect"
+      },
+      "score": "Upcoming"
     },
     {
       "id": "spain-austria",
       "label": "Spain v Austria",
-      "score": "Upcoming",
-      "outcomes": {}
+      "outcomes": {},
+      "score": "Upcoming"
     },
     {
       "id": "portugal-croatia",
       "label": "Portugal v Croatia",
-      "score": "Upcoming",
-      "outcomes": {}
+      "outcomes": {},
+      "score": "Upcoming"
     },
     {
       "id": "switzerland-algeria",
       "label": "Switzerland v Algeria",
-      "score": "Upcoming",
-      "outcomes": {}
+      "outcomes": {},
+      "score": "Upcoming"
     },
     {
       "id": "australia-egypt",
       "label": "Australia v Egypt",
-      "score": "Upcoming",
-      "outcomes": {}
+      "outcomes": {},
+      "score": "Upcoming"
     },
     {
       "id": "argentina-cabo-verde",
       "label": "Argentina v Cabo Verde",
-      "score": "Upcoming",
-      "outcomes": {}
+      "outcomes": {},
+      "score": "Upcoming"
     },
     {
       "id": "colombia-ghana",
       "label": "Colombia v Ghana",
-      "score": "Upcoming",
-      "outcomes": {}
+      "outcomes": {},
+      "score": "Upcoming"
     }
   ]
 }
