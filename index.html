@@ -421,6 +421,14 @@
       color: var(--player-color, var(--ink));
     }
 
+    .score-move {
+      display: inline-block;
+      margin-right: 10px;
+      color: var(--player-color, var(--dim));
+      font-size: 1rem;
+      vertical-align: middle;
+    }
+
     .points {
       display: block;
       margin-top: 4px;
@@ -854,6 +862,7 @@
     let players = state.players;
     let rounds = state.rounds;
     let matches = state.matches;
+    let previousRanks = state.previousRanks;
     let activeView = "scoreboard";
 
     setAdmin(isAdmin);
@@ -889,6 +898,7 @@
         players = publishedState.players;
         rounds = publishedState.rounds;
         matches = publishedState.matches;
+        previousRanks = publishedState.previousRanks;
         persistState();
         render();
       } catch {
@@ -900,7 +910,8 @@
       return {
         players: structuredClone(starterPlayers),
         rounds: structuredClone(starterRounds),
-        matches: structuredClone(starterMatches)
+        matches: structuredClone(starterMatches),
+        previousRanks: {}
       };
     }
 
@@ -910,7 +921,8 @@
           ? nextState.players.map(normalizePlayer)
           : structuredClone(starterPlayers),
         rounds: Array.isArray(nextState.rounds) ? nextState.rounds : structuredClone(starterRounds),
-        matches: Array.isArray(nextState.matches) ? nextState.matches.map(normalizeMatch) : structuredClone(starterMatches)
+        matches: Array.isArray(nextState.matches) ? nextState.matches.map(normalizeMatch) : structuredClone(starterMatches),
+        previousRanks: nextState.previousRanks && typeof nextState.previousRanks === "object" ? nextState.previousRanks : {}
       };
     }
 
@@ -986,7 +998,8 @@
           wrong: Number(player.wrong) || 0
         })),
         rounds,
-        matches
+        matches,
+        previousRanks
       };
     }
 
@@ -1011,7 +1024,7 @@
           <div class="name">
             <span class="player-name"></span>
           </div>
-          <div class="score">${points}<span class="points">points</span></div>
+          <div class="score"><span class="score-move"></span>${points}<span class="points">points</span></div>
           <div class="breakdown">
             <span class="outcome-perfect">★ ${Number(player.stars) || 0}</span>
             <span class="outcome-correct">✓ ${Number(player.correct) || 0}</span>
@@ -1026,6 +1039,9 @@
           emoji.textContent = profile.emoji;
           item.querySelector(".player-name").append(" ", emoji);
         }
+        const movement = movementFor(player.name, rank);
+        const moveEl = item.querySelector(".score-move");
+        moveEl.textContent = movement.label;
         item.addEventListener("click", () => item.classList.toggle("open"));
         item.addEventListener("keydown", (event) => {
           if (event.key === "Enter" || event.key === " ") {
@@ -1036,6 +1052,28 @@
         item.tabIndex = 0;
         scoreboard.appendChild(item);
       });
+    }
+
+    function movementFor(playerName, currentRank) {
+      const previousRank = Number(previousRanks[playerName]);
+      if (!previousRank) return { label: "" };
+      const delta = previousRank - currentRank;
+      if (delta > 0) return { label: "↑" };
+      if (delta < 0) return { label: "↓" };
+      return { label: "" };
+    }
+
+    function currentRankMap() {
+      const ranks = {};
+      let previousPoints = null;
+      let currentRank = 0;
+      sortedPlayers().forEach((player) => {
+        const points = calculatePoints(player);
+        if (points !== previousPoints) currentRank += 1;
+        previousPoints = points;
+        ranks[player.name] = currentRank;
+      });
+      return ranks;
     }
 
     function renderTitle() {
@@ -1077,6 +1115,7 @@
           cell.setAttribute("aria-label", `${playerName}, ${match.label}, ${outcome || "not played"}`);
           cell.addEventListener("click", () => {
             if (isAdmin) {
+              previousRanks = currentRankMap();
               const next = nextOutcome(outcome);
               match.outcomes[playerName] = next;
               applyOutcomeDelta(playerName, outcome, next);
