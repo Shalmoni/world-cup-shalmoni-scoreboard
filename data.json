@@ -52,7 +52,7 @@
   "rounds": [
     {
       "current": true,
-      "done": 8,
+      "done": 10,
       "name": "Round of 32",
       "total": 16
     },
