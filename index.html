@@ -13,10 +13,11 @@
       --dim: #777;
       --line: #fff;
       --card: #000;
-      --accent: #39ff14;
+      --accent: #fff;
+      --star: #39ff14;
       --yellow: #ffe84a;
       --red: #ff3b30;
-      --shadow: 8px 8px 0 #39ff14;
+      --shadow: 8px 8px 0 #fff;
     }
 
     * { box-sizing: border-box; }
@@ -73,6 +74,10 @@
       letter-spacing: 0;
       color: var(--accent);
       text-transform: uppercase;
+    }
+
+    .title-player-letter {
+      color: var(--letter-color, var(--accent));
     }
 
     .subtitle {
@@ -271,10 +276,14 @@
       z-index: 3;
     }
 
+    .match-head.player-head {
+      font-size: .78rem;
+    }
+
     .outcome-perfect,
     .match-cell.perfect {
-      color: var(--accent);
-      border-color: var(--accent);
+      color: var(--star);
+      border-color: var(--line);
     }
 
     .outcome-correct,
@@ -324,16 +333,16 @@
       place-items: center;
       width: 42px;
       height: 42px;
-      border: 1px solid var(--accent);
+      border: 1px solid var(--player-color, var(--accent));
       border-radius: 0;
       background: #000;
-      color: var(--accent);
+      color: var(--player-color, var(--accent));
       font-weight: 900;
     }
 
     .player:first-child .rank,
     .player.first-place .rank {
-      background: var(--accent);
+      background: var(--player-color, var(--accent));
       color: #000;
     }
 
@@ -344,7 +353,7 @@
 
     .player.top-two .rank {
       background: #000;
-      color: var(--accent);
+      color: var(--player-color, var(--accent));
     }
 
     .name {
@@ -356,6 +365,16 @@
       overflow-wrap: anywhere;
       font-size: 1.08rem;
       font-weight: 850;
+    }
+
+    .player-name {
+      color: var(--player-color, var(--ink));
+    }
+
+    .player-emoji {
+      color: var(--player-color, var(--ink));
+      font-size: 2em;
+      line-height: 1;
     }
 
     .played {
@@ -388,6 +407,10 @@
       border: 1px solid currentColor;
     }
 
+    .breakdown .outcome-perfect {
+      border-color: var(--line);
+    }
+
     .score {
       min-width: 72px;
       text-align: right;
@@ -395,12 +418,13 @@
       line-height: 1;
       font-weight: 950;
       font-variant-numeric: tabular-nums;
+      color: var(--player-color, var(--ink));
     }
 
     .points {
       display: block;
       margin-top: 4px;
-      color: var(--muted);
+      color: var(--player-color, var(--muted));
       font-size: .75rem;
       font-weight: 800;
       text-transform: uppercase;
@@ -550,6 +574,29 @@
       font-size: .86rem;
     }
 
+    .toast {
+      position: fixed;
+      left: 14px;
+      right: 14px;
+      bottom: 18px;
+      z-index: 10;
+      display: none;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: #000;
+      color: var(--ink);
+      box-shadow: 5px 5px 0 var(--accent);
+      font-size: .88rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .toast.show {
+      display: block;
+    }
+
     @media (min-width: 640px) {
       main { padding-top: 28px; }
       .player { grid-template-columns: 56px 1fr auto; padding: 16px; }
@@ -566,7 +613,7 @@
     </div>
 
     <header>
-      <h1>World Cup Shalmoni Scoreboard</h1>
+      <h1 id="mainTitle">World Cup Shalmoni Scoreboard</h1>
       <p class="subtitle">Live standings for the Shalmoni World Cup 2026 prediction game.</p>
       <ol class="rounds" id="rounds" aria-label="Tournament rounds"></ol>
     </header>
@@ -587,6 +634,7 @@
       </div>
     </section>
     <p class="hint" id="hint"></p>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </main>
 
   <dialog id="editorDialog">
@@ -651,7 +699,7 @@
     ];
 
     const starterRounds = [
-      { name: "Round of 32", done: 1, total: 16, current: true },
+      { name: "Round of 32", done: 10, total: 16, current: true },
       { name: "Round of 16", done: 0, total: 8, current: false },
       { name: "Quarter finals", done: 0, total: 4, current: false },
       { name: "Semi finals", done: 0, total: 2, current: false },
@@ -660,6 +708,16 @@
     ];
 
     const playerNames = ["Otsar", "Coral", "David", "Yosef", "Shira", "Yonatan", "Iris", "Becky"];
+    const playerProfiles = {
+      Otsar: { color: "#FF500A", emoji: "🫈" },
+      Coral: { color: "#95B9C7", emoji: "👩🏻‍🔬" },
+      David: { color: "#7F00FF", emoji: "🥸" },
+      Yosef: { color: "#777B7E", emoji: "🐦‍⬛" },
+      Shira: { color: "#A2E4B8", emoji: "🫪" },
+      Yonatan: { color: "#FFFF00", emoji: "🗿" },
+      Iris: { color: "#82CAFF", emoji: "💃" },
+      Becky: { color: "#FF007F", emoji: "🐞" }
+    };
     const playerLabels = {
       Otsar: "OTS",
       Coral: "COR",
@@ -716,19 +774,19 @@
       {
         id: "england-dr-congo",
         label: "England v DR Congo",
-        score: "Upcoming",
+        score: "England 2-1, RT",
         outcomes: {}
       },
       {
         id: "belgium-senegal",
         label: "Belgium v Senegal",
-        score: "Upcoming",
+        score: "Belgium 3-2, RT",
         outcomes: {}
       },
       {
         id: "usa-bosnia",
         label: "USA v Bosnia",
-        score: "Upcoming",
+        score: "USA 2-0, RT",
         outcomes: {}
       },
       {
@@ -770,6 +828,7 @@
     ];
 
     const scoreboard = document.querySelector("#scoreboard");
+    const mainTitle = document.querySelector("#mainTitle");
     const scoreboardView = document.querySelector("#scoreboardView");
     const tableView = document.querySelector("#tableView");
     const matchTable = document.querySelector("#matchTable");
@@ -786,6 +845,7 @@
     const githubTokenInput = document.querySelector("#githubTokenInput");
     const publishError = document.querySelector("#publishError");
     const hint = document.querySelector("#hint");
+    const toast = document.querySelector("#toast");
     const toolbar = document.querySelector(".toolbar");
     const params = new URLSearchParams(location.search);
 
@@ -897,6 +957,15 @@
       }, 1800);
     }
 
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timeout);
+      showToast.timeout = window.setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3200);
+    }
+
     function sortedPlayers() {
       return [...players].sort((a, b) => calculatePoints(b) - calculatePoints(a) || a.name.localeCompare(b.name));
     }
@@ -922,6 +991,7 @@
     }
 
     function render() {
+      renderTitle();
       renderRounds();
       renderMatchTable();
       scoreboard.innerHTML = "";
@@ -933,7 +1003,9 @@
         const rank = currentRank;
         previousPoints = points;
         const item = document.createElement("article");
+        const profile = playerProfiles[player.name] || { color: "var(--ink)", emoji: "" };
         item.className = `player${rank === 1 ? " first-place" : ""}${rank === 2 ? " top-two" : ""}${rank === 3 ? " top-three" : ""}`;
+        item.style.setProperty("--player-color", profile.color);
         item.innerHTML = `
           <div class="rank">${rank}</div>
           <div class="name">
@@ -946,7 +1018,14 @@
             <span class="outcome-wrong">× ${Number(player.wrong) || 0}</span>
           </div>
         `;
-        item.querySelector(".player-name").textContent = player.name || "Unnamed";
+        item.querySelector(".player-name").innerHTML = "";
+        item.querySelector(".player-name").append(document.createTextNode(player.name || "Unnamed"));
+        if (profile.emoji) {
+          const emoji = document.createElement("span");
+          emoji.className = "player-emoji";
+          emoji.textContent = profile.emoji;
+          item.querySelector(".player-name").append(" ", emoji);
+        }
         item.addEventListener("click", () => item.classList.toggle("open"));
         item.addEventListener("keydown", (event) => {
           if (event.key === "Enter" || event.key === " ") {
@@ -959,10 +1038,27 @@
       });
     }
 
+    function renderTitle() {
+      const letters = "Shalmoni".split("");
+      const orderedPlayers = sortedPlayers();
+      mainTitle.textContent = "";
+      mainTitle.append(document.createTextNode("World Cup "));
+      letters.forEach((letter, index) => {
+        const player = orderedPlayers[index];
+        const profile = playerProfiles[player?.name] || {};
+        const span = document.createElement("span");
+        span.className = "title-player-letter";
+        span.style.setProperty("--letter-color", profile.color || "var(--accent)");
+        span.textContent = letter;
+        mainTitle.append(span);
+      });
+      mainTitle.append(document.createTextNode(" Scoreboard"));
+    }
+
     function renderMatchTable() {
       matchTable.innerHTML = "";
       addMatchNode("match-head", "Game");
-      playerNames.forEach((name) => addMatchNode("match-head", playerLabels[name] || name));
+      playerNames.forEach((name) => addMatchNode("match-head player-head", playerProfiles[name]?.emoji || playerLabels[name] || name));
       matches.forEach((match, matchIndex) => {
         const game = document.createElement("div");
         game.className = "match-game";
@@ -988,7 +1084,9 @@
               render();
               return;
             }
-            flashHint(`${playerName} / ${match.label}: ${outcomeLabel(outcome)} (${outcomePoints(outcome)} pts). Final: ${match.score}`);
+            const message = `${playerName} / ${match.label}: ${outcomeLabel(outcome)} (${outcomePoints(outcome)} pts). Final: ${match.score}`;
+            flashHint(message);
+            showToast(message);
           });
           matchTable.appendChild(cell);
         });
