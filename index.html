@@ -196,14 +196,16 @@
 
     .match-table-wrap {
       overflow-x: auto;
+      max-width: 100%;
       padding-bottom: 10px;
+      scrollbar-width: thin;
     }
 
     .match-table {
       display: grid;
-      grid-template-columns: minmax(156px, 1.8fr) repeat(8, 46px);
-      gap: 4px;
-      min-width: 540px;
+      grid-template-columns: 112px repeat(8, 34px);
+      gap: 3px;
+      min-width: 408px;
       text-transform: uppercase;
     }
 
@@ -217,40 +219,56 @@
     .match-head {
       display: grid;
       place-items: center;
-      min-height: 34px;
+      min-height: 38px;
+      padding: 3px;
       color: var(--dim);
-      font-size: .66rem;
+      font-size: .52rem;
       font-weight: 850;
       text-align: center;
+      line-height: 1;
+      overflow-wrap: anywhere;
+      position: sticky;
+      top: 0;
+      z-index: 2;
     }
 
     .match-game {
       display: grid;
-      gap: 4px;
-      min-height: 52px;
-      padding: 8px;
+      gap: 3px;
+      min-height: 42px;
+      padding: 5px 6px;
+      position: sticky;
+      left: 0;
+      z-index: 1;
     }
 
     .match-title {
       color: var(--ink);
-      font-size: .78rem;
+      font-size: .62rem;
       font-weight: 900;
+      line-height: 1.05;
     }
 
     .match-score {
       color: var(--accent);
-      font-size: .72rem;
+      font-size: .54rem;
       font-weight: 850;
+      line-height: 1.05;
     }
 
     .match-cell {
       display: grid;
       place-items: center;
-      min-height: 52px;
+      min-height: 42px;
       color: var(--dim);
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 950;
       box-shadow: none;
+    }
+
+    .match-table .match-head:first-child {
+      left: 0;
+      z-index: 3;
     }
 
     .outcome-perfect,
@@ -642,6 +660,16 @@
     ];
 
     const playerNames = ["Otsar", "Coral", "David", "Yosef", "Shira", "Yonatan", "Iris", "Becky"];
+    const playerLabels = {
+      Otsar: "OTS",
+      Coral: "COR",
+      David: "DAV",
+      Yosef: "YOS",
+      Shira: "SHI",
+      Yonatan: "YON",
+      Iris: "IRI",
+      Becky: "BEC"
+    };
     const starterMatches = [
       {
         id: "sa-canada",
@@ -934,7 +962,7 @@
     function renderMatchTable() {
       matchTable.innerHTML = "";
       addMatchNode("match-head", "Game");
-      playerNames.forEach((name) => addMatchNode("match-head", name));
+      playerNames.forEach((name) => addMatchNode("match-head", playerLabels[name] || name));
       matches.forEach((match, matchIndex) => {
         const game = document.createElement("div");
         game.className = "match-game";
