@@ -704,7 +704,7 @@
     ];
 
     const starterRounds = [
-      { name: "Round of 32", done: 10, total: 16, current: true },
+      { name: "Round of 32", done: 13, total: 16, current: true },
       { name: "Round of 16", done: 0, total: 8, current: false },
       { name: "Quarter finals", done: 0, total: 4, current: false },
       { name: "Semi finals", done: 0, total: 2, current: false },
@@ -809,25 +809,29 @@
       {
         id: "switzerland-algeria",
         label: "Switzerland v Algeria",
-        score: "Upcoming",
+        score: "Switzerland 2-0, RT",
+        espnEventId: "760498",
         outcomes: {}
       },
       {
         id: "australia-egypt",
         label: "Australia v Egypt",
         score: "Upcoming",
+        espnEventId: "760499",
         outcomes: {}
       },
       {
         id: "argentina-cabo-verde",
         label: "Argentina v Cabo Verde",
         score: "Upcoming",
+        espnEventId: "760500",
         outcomes: {}
       },
       {
         id: "colombia-ghana",
         label: "Colombia v Ghana",
         score: "Upcoming",
+        espnEventId: "760501",
         outcomes: {}
       }
     ];
@@ -931,6 +935,7 @@
         id: match.id || crypto.randomUUID(),
         label: match.label || "Match",
         score: match.score || "",
+        espnEventId: match.espnEventId || "",
         outcomes: { ...(match.outcomes || {}) }
       };
     }
