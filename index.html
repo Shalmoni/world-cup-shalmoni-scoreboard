@@ -625,6 +625,7 @@
     <section class="toolbar admin-only" aria-label="Scoreboard controls">
       <button class="primary admin-only" id="editButton" type="button">Edit table</button>
       <button class="primary admin-only" id="roundsButton" type="button">Edit rounds</button>
+      <button class="link-button admin-only" id="updateScoresButton" type="button">Update scores</button>
       <button class="link-button admin-only" id="publishAdminButton" type="button">Publish</button>
       <button class="link-button admin-only" id="exitAdminButton" type="button">Exit admin</button>
     </section>
@@ -678,7 +679,7 @@
 
   <dialog id="publishDialog">
     <form class="editor" method="dialog">
-      <h2>Publish to GitHub</h2>
+      <h2 id="publishDialogTitle">Publish to GitHub</h2>
       <input id="githubTokenInput" type="password" autocomplete="off" placeholder="GitHub token" aria-label="GitHub token">
       <p class="password-error" id="publishError">Token stays in this browser session.</p>
       <div class="dialog-actions">
@@ -846,6 +847,8 @@
     const roundsDialog = document.querySelector("#roundsDialog");
     const roundEditorRows = document.querySelector("#roundEditorRows");
     const publishDialog = document.querySelector("#publishDialog");
+    const publishDialogTitle = document.querySelector("#publishDialogTitle");
+    const publishButton = document.querySelector("#publishButton");
     const githubTokenInput = document.querySelector("#githubTokenInput");
     const publishError = document.querySelector("#publishError");
     const hint = document.querySelector("#hint");
@@ -860,6 +863,7 @@
     let matches = state.matches;
     let previousRanks = state.previousRanks;
     let activeView = "scoreboard";
+    let pendingGitHubAction = "publish";
 
     setAdmin(isAdmin);
     loadPublishedState();
@@ -1342,15 +1346,46 @@
       }
     }
 
+    async function triggerScoreUpdate(token) {
+      publishError.textContent = "Starting score update...";
+      const response = await fetch(githubDispatchUrl, {
+        method: "POST",
+        headers: {
+          "Accept": "application/vnd.github+json",
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "X-GitHub-Api-Version": "2022-11-28"
+        },
+        body: JSON.stringify({
+          event_type: "scoreboard-score-update",
+          client_payload: {
+            requestedAt: new Date().toISOString()
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `GitHub returned ${response.status}`);
+      }
+    }
+
+    function showGitHubTokenDialog(action) {
+      pendingGitHubAction = action;
+      githubTokenInput.value = "";
+      publishDialogTitle.textContent = action === "scores" ? "Update scores" : "Publish to GitHub";
+      publishButton.textContent = action === "scores" ? "Update" : "Publish";
+      publishError.textContent = "Enter a GitHub token.";
+      publishDialog.showModal();
+      githubTokenInput.focus();
+    }
+
     async function exitAdminAndPublish() {
       persistState();
       syncUrlToState();
       const token = sessionStorage.getItem("shalmoni-github-token");
       if (!token) {
-        githubTokenInput.value = "";
-        publishError.textContent = "Enter a GitHub token to publish these scores.";
-        publishDialog.showModal();
-        githubTokenInput.focus();
+        showGitHubTokenDialog("publish");
         return;
       }
       try {
@@ -1362,6 +1397,23 @@
         sessionStorage.removeItem("shalmoni-github-token");
         publishError.textContent = "Publish failed. Enter token again.";
         publishDialog.showModal();
+      }
+    }
+
+    async function updateScoresFromGitHub() {
+      const token = sessionStorage.getItem("shalmoni-github-token");
+      if (!token) {
+        showGitHubTokenDialog("scores");
+        return;
+      }
+      try {
+        flashHint("Starting GitHub score update...");
+        await triggerScoreUpdate(token);
+        hint.textContent = "Score update started.";
+      } catch (error) {
+        sessionStorage.removeItem("shalmoni-github-token");
+        showGitHubTokenDialog("scores");
+        publishError.textContent = "Score update failed. Enter token again.";
       }
     }
 
@@ -1415,6 +1467,10 @@
       exitAdminAndPublish();
     });
 
+    document.querySelector("#updateScoresButton").addEventListener("click", () => {
+      updateScoresFromGitHub();
+    });
+
     document.querySelector("#addButton").addEventListener("click", () => addEditorRow());
     document.querySelector("#saveButton").addEventListener("click", saveFromEditor);
     document.querySelector("#cancelButton").addEventListener("click", () => editorDialog.close());
@@ -1429,13 +1485,20 @@
       }
       try {
         sessionStorage.setItem("shalmoni-github-token", token);
-        await publishToGitHub(token);
+        if (pendingGitHubAction === "scores") {
+          await triggerScoreUpdate(token);
+          hint.textContent = "Score update started.";
+        } else {
+          await publishToGitHub(token);
+          setAdmin(false);
+          hint.textContent = "Published.";
+        }
         publishDialog.close();
-        setAdmin(false);
-        hint.textContent = "Published.";
       } catch (error) {
         sessionStorage.removeItem("shalmoni-github-token");
-        publishError.textContent = "Publish failed. Check token permissions.";
+        publishError.textContent = pendingGitHubAction === "scores"
+          ? "Score update failed. Check token permissions."
+          : "Publish failed. Check token permissions.";
       }
     });
 

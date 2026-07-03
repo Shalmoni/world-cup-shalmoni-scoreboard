@@ -1,0 +1,76 @@
+name: Update match scores
+
+on:
+  repository_dispatch:
+    types: [scoreboard-score-update]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      SCORES_SOURCE_URL: ${{ vars.SCORES_SOURCE_URL || secrets.SCORES_SOURCE_URL }}
+    steps:
+      - name: Update data.json from score source
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sourceUrl = process.env.SCORES_SOURCE_URL;
+            if (!sourceUrl) {
+              core.setFailed("Set SCORES_SOURCE_URL as a repository variable or secret.");
+              return;
+            }
+
+            const sourceResponse = await fetch(sourceUrl, { headers: { "Accept": "application/json" } });
+            if (!sourceResponse.ok) {
+              core.setFailed(`Score source returned ${sourceResponse.status}.`);
+              return;
+            }
+
+            const source = await sourceResponse.json();
+            const scoreUpdates = Array.isArray(source) ? source : source.matches;
+            if (!Array.isArray(scoreUpdates)) {
+              core.setFailed("Score source must be an array or an object with a matches array.");
+              return;
+            }
+
+            const existing = await github.rest.repos.getContent({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              path: "data.json",
+              ref: "main"
+            });
+
+            const data = JSON.parse(Buffer.from(existing.data.content, "base64").toString("utf8"));
+            const updatesById = new Map(
+              scoreUpdates
+                .filter((match) => match && match.id && typeof match.score === "string")
+                .map((match) => [match.id, match.score])
+            );
+
+            let changed = false;
+            data.matches = (Array.isArray(data.matches) ? data.matches : []).map((match) => {
+              const nextScore = updatesById.get(match.id);
+              if (!nextScore || match.score === nextScore) return match;
+              changed = true;
+              return { ...match, score: nextScore };
+            });
+
+            if (!changed) {
+              core.info("No score changes found.");
+              return;
+            }
+
+            const content = JSON.stringify(data, null, 2) + "\n";
+            await github.rest.repos.createOrUpdateFileContents({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              path: "data.json",
+              message: "Update match scores",
+              content: Buffer.from(content).toString("base64"),
+              sha: existing.data.sha,
+              branch: "main"
+            });
