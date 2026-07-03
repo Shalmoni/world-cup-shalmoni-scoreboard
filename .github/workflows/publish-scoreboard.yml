@@ -24,7 +24,8 @@ jobs:
             const content = JSON.stringify({
               players: state.players,
               rounds: state.rounds,
-              matches: Array.isArray(state.matches) ? state.matches : []
+              matches: Array.isArray(state.matches) ? state.matches : [],
+              previousRanks: state.previousRanks && typeof state.previousRanks === "object" ? state.previousRanks : {}
             }, null, 2) + "\n";
 
             let sha;

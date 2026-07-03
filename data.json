@@ -230,7 +230,7 @@
         "Yonatan": "perfect",
         "Yosef": "perfect"
       },
-      "score": "Upcoming"
+      "score": "Spain 3-0, RT"
     },
     {
       "id": "portugal-croatia",
@@ -244,7 +244,7 @@
         "Yonatan": "correct",
         "Yosef": "wrong"
       },
-      "score": "Upcoming"
+      "score": "Portugal 2-1, RT"
     },
     {
       "id": "switzerland-algeria",
@@ -270,5 +270,15 @@
       "outcomes": {},
       "score": "Upcoming"
     }
-  ]
+  ],
+  "previousRanks": {
+    "Otsar": 1,
+    "Shira": 1,
+    "Yonatan": 1,
+    "Yosef": 1,
+    "David": 2,
+    "Coral": 3,
+    "Becky": 4,
+    "Iris": 5
+  }
 }
