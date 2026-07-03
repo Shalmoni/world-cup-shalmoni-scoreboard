@@ -1,45 +1,45 @@
 {
   "players": [
     {
-      "correct": 2,
+      "correct": 3,
       "name": "Otsar",
-      "stars": 7,
+      "stars": 8,
       "wrong": 1
     },
     {
-      "correct": 4,
+      "correct": 5,
       "name": "Coral",
-      "stars": 1,
+      "stars": 2,
       "wrong": 4
     },
     {
       "correct": 1,
       "name": "David",
-      "stars": 5,
+      "stars": 7,
       "wrong": 4
     },
     {
       "correct": 2,
       "name": "Yosef",
-      "stars": 7,
-      "wrong": 1
-    },
-    {
-      "correct": 0,
-      "name": "Shira",
       "stars": 8,
       "wrong": 2
     },
     {
-      "correct": 2,
+      "correct": 0,
+      "name": "Shira",
+      "stars": 10,
+      "wrong": 2
+    },
+    {
+      "correct": 3,
       "name": "Yonatan",
-      "stars": 7,
+      "stars": 8,
       "wrong": 1
     },
     {
       "correct": 0,
       "name": "Iris",
-      "stars": 0,
+      "stars": 2,
       "wrong": 0
     },
     {
@@ -52,7 +52,7 @@
   "rounds": [
     {
       "current": true,
-      "done": 10,
+      "done": 12,
       "name": "Round of 32",
       "total": 16
     },
@@ -221,13 +221,29 @@
     {
       "id": "spain-austria",
       "label": "Spain v Austria",
-      "outcomes": {},
+      "outcomes": {
+        "Coral": "correct",
+        "David": "perfect",
+        "Iris": "perfect",
+        "Otsar": "perfect",
+        "Shira": "perfect",
+        "Yonatan": "perfect",
+        "Yosef": "perfect"
+      },
       "score": "Upcoming"
     },
     {
       "id": "portugal-croatia",
       "label": "Portugal v Croatia",
-      "outcomes": {},
+      "outcomes": {
+        "Coral": "perfect",
+        "David": "perfect",
+        "Iris": "perfect",
+        "Otsar": "correct",
+        "Shira": "perfect",
+        "Yonatan": "correct",
+        "Yosef": "wrong"
+      },
       "score": "Upcoming"
     },
     {
