@@ -601,6 +601,37 @@
       display: block;
     }
 
+    .analytics-pixel {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .analytics-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .analytics-badge {
+      width: min(100%, 240px);
+      height: 28px;
+      image-rendering: pixelated;
+    }
+
+    .analytics-panel a {
+      display: inline-grid;
+      place-items: center;
+      min-height: 42px;
+      padding: 0 12px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      text-decoration: none;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
     @media (min-width: 640px) {
       main { padding-top: 28px; }
       .player { grid-template-columns: 56px 1fr auto; padding: 16px; }
@@ -625,6 +656,7 @@
     <section class="toolbar admin-only" aria-label="Scoreboard controls">
       <button class="primary admin-only" id="editButton" type="button">Edit table</button>
       <button class="primary admin-only" id="roundsButton" type="button">Edit rounds</button>
+      <button class="link-button admin-only" id="analyticsButton" type="button">Analytics</button>
       <button class="link-button admin-only" id="updateScoresButton" type="button">Update scores</button>
       <button class="link-button admin-only" id="publishAdminButton" type="button">Publish</button>
       <button class="link-button admin-only" id="exitAdminButton" type="button">Exit admin</button>
@@ -689,9 +721,25 @@
     </form>
   </dialog>
 
+  <dialog id="analyticsDialog">
+    <form class="editor analytics-panel" method="dialog">
+      <h2>Analytics</h2>
+      <p class="password-error">Simple total visit counter.</p>
+      <img class="analytics-badge" id="analyticsBadge" alt="Visit counter">
+      <a class="link-button" id="analyticsLink" target="_blank" rel="noopener">Open counter</a>
+      <div class="dialog-actions">
+        <button class="primary" id="analyticsCloseButton" type="button">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <img class="analytics-pixel" alt="" referrerpolicy="no-referrer-when-downgrade">
+
   <script>
     const adminPasswordHash = "54b88770a73edab54dadce46b7062c166b046ef57dd58a9953685a72ea541f9b";
     const githubDispatchUrl = "https://api.github.com/repos/Shalmoni/world-cup-shalmoni-scoreboard/dispatches";
+    const analyticsCounterUrl = "https://hits.sh/shalmoni.github.io/world-cup-shalmoni-scoreboard.svg?style=flat-square&label=visits&color=39ff14&labelColor=000000";
+    const analyticsPageUrl = "https://hits.sh/shalmoni.github.io/world-cup-shalmoni-scoreboard/";
     const starterPlayers = [
       { name: "Otsar", stars: 2, correct: 0, wrong: 0 },
       { name: "Coral", stars: 4, correct: 0, wrong: 0 },
@@ -855,6 +903,9 @@
     const publishButton = document.querySelector("#publishButton");
     const githubTokenInput = document.querySelector("#githubTokenInput");
     const publishError = document.querySelector("#publishError");
+    const analyticsDialog = document.querySelector("#analyticsDialog");
+    const analyticsBadge = document.querySelector("#analyticsBadge");
+    const analyticsLink = document.querySelector("#analyticsLink");
     const hint = document.querySelector("#hint");
     const toast = document.querySelector("#toast");
     const toolbar = document.querySelector(".toolbar");
@@ -870,7 +921,13 @@
     let pendingGitHubAction = "publish";
 
     setAdmin(isAdmin);
+    trackVisit();
     loadPublishedState();
+
+    function trackVisit() {
+      document.querySelector(".analytics-pixel").src = `${analyticsCounterUrl}&cache=${Date.now()}`;
+      analyticsLink.href = analyticsPageUrl;
+    }
 
     function loadState() {
       const fromStateUrl = params.get("state");
@@ -1464,6 +1521,11 @@
       roundsDialog.showModal();
     });
 
+    document.querySelector("#analyticsButton").addEventListener("click", () => {
+      analyticsBadge.src = `${analyticsCounterUrl}&refresh=${Date.now()}`;
+      analyticsDialog.showModal();
+    });
+
     document.querySelector("#exitAdminButton").addEventListener("click", () => {
       setAdmin(false);
     });
@@ -1508,6 +1570,7 @@
     });
 
     document.querySelector("#publishCancelButton").addEventListener("click", () => publishDialog.close());
+    document.querySelector("#analyticsCloseButton").addEventListener("click", () => analyticsDialog.close());
 
     render();
   </script>
