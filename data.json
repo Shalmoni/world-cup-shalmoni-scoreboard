@@ -4,28 +4,28 @@
       "correct": 3,
       "name": "Otsar",
       "stars": 8,
-      "wrong": 1
+      "wrong": 2
     },
     {
       "correct": 5,
       "name": "Coral",
-      "stars": 2,
+      "stars": 3,
       "wrong": 4
     },
     {
       "correct": 1,
       "name": "David",
-      "stars": 7,
+      "stars": 8,
       "wrong": 4
     },
     {
       "correct": 2,
       "name": "Yosef",
       "stars": 8,
-      "wrong": 2
+      "wrong": 3
     },
     {
-      "correct": 0,
+      "correct": 1,
       "name": "Shira",
       "stars": 10,
       "wrong": 2
@@ -34,13 +34,13 @@
       "correct": 3,
       "name": "Yonatan",
       "stars": 8,
-      "wrong": 1
+      "wrong": 2
     },
     {
       "correct": 0,
       "name": "Iris",
       "stars": 2,
-      "wrong": 0
+      "wrong": 1
     },
     {
       "correct": 0,
@@ -89,6 +89,7 @@
   ],
   "matches": [
     {
+      "espnEventId": "",
       "id": "sa-canada",
       "label": "SA v Canada",
       "outcomes": {
@@ -103,6 +104,7 @@
       "score": "Canada 1-0, RT"
     },
     {
+      "espnEventId": "",
       "id": "brazil-japan",
       "label": "Brazil v Japan",
       "outcomes": {
@@ -116,6 +118,7 @@
       "score": "Brazil 2-1, RT"
     },
     {
+      "espnEventId": "",
       "id": "germany-paraguay",
       "label": "Germany v Paraguay",
       "outcomes": {
@@ -129,6 +132,7 @@
       "score": "1-1, Paraguay 4-3 pens"
     },
     {
+      "espnEventId": "",
       "id": "netherlands-morocco",
       "label": "Netherlands v Morocco",
       "outcomes": {
@@ -142,6 +146,7 @@
       "score": "1-1, Morocco 3-2 pens"
     },
     {
+      "espnEventId": "",
       "id": "ivory-norway",
       "label": "Ivory Coast v Norway",
       "outcomes": {
@@ -154,6 +159,7 @@
       "score": "Norway 2-1, RT"
     },
     {
+      "espnEventId": "",
       "id": "france-sweden",
       "label": "France v Sweden",
       "outcomes": {
@@ -167,6 +173,7 @@
       "score": "France 3-0, RT"
     },
     {
+      "espnEventId": "",
       "id": "mexico-ecuador",
       "label": "Mexico v Ecuador",
       "outcomes": {
@@ -180,6 +187,7 @@
       "score": "Mexico 2-0, RT"
     },
     {
+      "espnEventId": "",
       "id": "england-dr-congo",
       "label": "England v DR Congo",
       "outcomes": {
@@ -193,6 +201,7 @@
       "score": "England 2-1, RT"
     },
     {
+      "espnEventId": "",
       "id": "belgium-senegal",
       "label": "Belgium v Senegal",
       "outcomes": {
@@ -206,6 +215,7 @@
       "score": "Belgium 3-2, RT"
     },
     {
+      "espnEventId": "",
       "id": "usa-bosnia",
       "label": "USA v Bosnia",
       "outcomes": {
@@ -219,6 +229,7 @@
       "score": "USA 2-0, RT"
     },
     {
+      "espnEventId": "",
       "id": "spain-austria",
       "label": "Spain v Austria",
       "outcomes": {
@@ -233,6 +244,7 @@
       "score": "Spain 3-0, RT"
     },
     {
+      "espnEventId": "",
       "id": "portugal-croatia",
       "label": "Portugal v Croatia",
       "outcomes": {
@@ -250,7 +262,15 @@
       "espnEventId": "760498",
       "id": "switzerland-algeria",
       "label": "Switzerland v Algeria",
-      "outcomes": {},
+      "outcomes": {
+        "Coral": "perfect",
+        "David": "perfect",
+        "Iris": "wrong",
+        "Otsar": "wrong",
+        "Shira": "correct",
+        "Yonatan": "wrong",
+        "Yosef": "wrong"
+      },
       "score": "Switzerland 2-0, RT"
     },
     {
@@ -276,13 +296,13 @@
     }
   ],
   "previousRanks": {
-    "Becky": 4,
-    "Coral": 3,
-    "David": 2,
-    "Iris": 5,
-    "Otsar": 1,
+    "Becky": 7,
+    "Coral": 5,
+    "David": 4,
+    "Iris": 6,
+    "Otsar": 2,
     "Shira": 1,
-    "Yonatan": 1,
-    "Yosef": 1
+    "Yonatan": 2,
+    "Yosef": 3
   }
 }
