@@ -11,6 +11,7 @@
       --ink: #fff;
       --muted: #fff;
       --dim: #777;
+      --past: #b8b8b8;
       --line: #fff;
       --card: #000;
       --accent: #fff;
@@ -120,6 +121,11 @@
       border-color: var(--accent);
       color: var(--accent);
       box-shadow: 2px 2px 0 var(--accent);
+    }
+
+    .round.past {
+      border-color: var(--past);
+      color: var(--past);
     }
 
     .round[role="button"] {
@@ -1351,7 +1357,8 @@
         const roundName = round.name || "Round";
         const tableId = roundName === "Round of 32" ? "round32" : roundName === "Round of 16" ? "round16" : "";
         const isSelectedTable = activeView === "table" && tableId && activeTable === tableId;
-        item.className = `round${round.current ? " current" : ""}${isSelectedTable ? " table-selected" : ""}`;
+        const isPast = !round.current && Number(round.done) >= Number(round.total) && Number(round.total) > 0;
+        item.className = `round${round.current ? " current" : ""}${isPast ? " past" : ""}${isSelectedTable ? " table-selected" : ""}`;
         item.innerHTML = `
           <span></span>
           <span class="round-count">${Number(round.done) || 0}/${Number(round.total) || 0}</span>
