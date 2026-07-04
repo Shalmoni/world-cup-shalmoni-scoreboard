@@ -122,6 +122,16 @@
       box-shadow: 2px 2px 0 var(--accent);
     }
 
+    .round[role="button"] {
+      cursor: pointer;
+    }
+
+    .round.table-selected {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 2px 2px 0 var(--accent);
+    }
+
     .round-count {
       font-size: 1.15em;
       color: inherit;
@@ -204,28 +214,6 @@
       max-width: 100%;
       padding-bottom: 10px;
       scrollbar-width: thin;
-    }
-
-    .table-tabs {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 4px;
-      margin-bottom: 8px;
-    }
-
-    .table-tab {
-      min-height: 38px;
-      padding: 0 8px;
-      border: 1px solid var(--dim);
-      color: var(--dim);
-      background: #000;
-      font-size: .72rem;
-      box-shadow: none;
-    }
-
-    .table-tab[aria-pressed="true"] {
-      border-color: var(--accent);
-      color: var(--accent);
     }
 
     .match-table {
@@ -688,10 +676,6 @@
       <section class="scoreboard" id="scoreboard" aria-live="polite"></section>
     </section>
     <section class="view" id="tableView" hidden>
-      <div class="table-tabs" aria-label="Prediction table selector">
-        <button class="table-tab" type="button" data-table-id="round16" aria-pressed="true">Round of 16</button>
-        <button class="table-tab" type="button" data-table-id="round32" aria-pressed="false">Round of 32</button>
-      </div>
       <div class="match-table-wrap">
         <div class="match-table" id="matchTable" aria-label="Prediction table"></div>
       </div>
@@ -974,7 +958,6 @@
     const scoreboardView = document.querySelector("#scoreboardView");
     const tableView = document.querySelector("#tableView");
     const matchTable = document.querySelector("#matchTable");
-    const tableTabButtons = document.querySelectorAll(".table-tab");
     const viewToggleButton = document.querySelector("#viewToggleButton");
     const roundsList = document.querySelector("#rounds");
     const editorDialog = document.querySelector("#editorDialog");
@@ -1240,9 +1223,7 @@
 
     function setActiveTable(nextTable) {
       activeTable = nextTable === "round32" ? "round32" : "round16";
-      tableTabButtons.forEach((button) => {
-        button.setAttribute("aria-pressed", String(button.dataset.tableId === activeTable));
-      });
+      renderRounds();
       renderMatchTable();
     }
 
@@ -1265,9 +1246,6 @@
 
     function renderMatchTable() {
       matchTable.innerHTML = "";
-      tableTabButtons.forEach((button) => {
-        button.setAttribute("aria-pressed", String(button.dataset.tableId === activeTable));
-      });
       matchTable.setAttribute("aria-label", `${activeTable === "round16" ? "Round of 16" : "Round of 32"} prediction table`);
       addMatchNode("match-head", "Game");
       playerNames.forEach((name) => addMatchNode("match-head player-head", playerProfiles[name]?.emoji || playerLabels[name] || name));
@@ -1363,18 +1341,37 @@
       scoreboardView.hidden = activeView !== "scoreboard";
       tableView.hidden = activeView !== "table";
       viewToggleButton.textContent = activeView === "scoreboard" ? "Table" : "Scores";
+      renderRounds();
     }
 
     function renderRounds() {
       roundsList.innerHTML = "";
       rounds.forEach((round) => {
         const item = document.createElement("li");
-        item.className = `round${round.current ? " current" : ""}`;
+        const roundName = round.name || "Round";
+        const tableId = roundName === "Round of 32" ? "round32" : roundName === "Round of 16" ? "round16" : "";
+        const isSelectedTable = activeView === "table" && tableId && activeTable === tableId;
+        item.className = `round${round.current ? " current" : ""}${isSelectedTable ? " table-selected" : ""}`;
         item.innerHTML = `
           <span></span>
           <span class="round-count">${Number(round.done) || 0}/${Number(round.total) || 0}</span>
         `;
-        item.querySelector("span").textContent = round.name || "Round";
+        item.querySelector("span").textContent = roundName;
+        if (tableId) {
+          item.tabIndex = 0;
+          item.setAttribute("role", "button");
+          item.setAttribute("aria-pressed", String(isSelectedTable));
+          item.addEventListener("click", () => {
+            setActiveTable(tableId);
+            switchView("table");
+          });
+          item.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              item.click();
+            }
+          });
+        }
         roundsList.appendChild(item);
       });
     }
@@ -1621,10 +1618,6 @@
 
     viewToggleButton.addEventListener("click", () => {
       switchView(activeView === "scoreboard" ? "table" : "scoreboard");
-    });
-
-    tableTabButtons.forEach((button) => {
-      button.addEventListener("click", () => setActiveTable(button.dataset.tableId));
     });
 
     document.querySelector("#editButton").addEventListener("click", () => {
