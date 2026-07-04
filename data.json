@@ -43,10 +43,10 @@
       "wrong": 2
     },
     {
-      "correct": 1,
+      "correct": 2,
       "name": "Becky",
       "stars": 1,
-      "wrong": 3
+      "wrong": 2
     }
   ],
   "rounds": [
@@ -328,7 +328,7 @@
       "id": "canada-morocco-r16",
       "label": "Canada v Morocco",
       "outcomes": {
-        "Becky": "wrong",
+        "Becky": "correct",
         "Coral": "correct",
         "David": "wrong",
         "Iris": "perfect",
