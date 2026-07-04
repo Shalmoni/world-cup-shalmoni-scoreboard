@@ -206,6 +206,28 @@
       scrollbar-width: thin;
     }
 
+    .table-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .table-tab {
+      min-height: 38px;
+      padding: 0 8px;
+      border: 1px solid var(--dim);
+      color: var(--dim);
+      background: #000;
+      font-size: .72rem;
+      box-shadow: none;
+    }
+
+    .table-tab[aria-pressed="true"] {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     .match-table {
       display: grid;
       grid-template-columns: 112px repeat(8, 34px);
@@ -666,8 +688,12 @@
       <section class="scoreboard" id="scoreboard" aria-live="polite"></section>
     </section>
     <section class="view" id="tableView" hidden>
+      <div class="table-tabs" aria-label="Prediction table selector">
+        <button class="table-tab" type="button" data-table-id="round16" aria-pressed="true">Round of 16</button>
+        <button class="table-tab" type="button" data-table-id="round32" aria-pressed="false">Round of 32</button>
+      </div>
       <div class="match-table-wrap">
-        <div class="match-table" id="matchTable" aria-label="Round of 32 prediction table"></div>
+        <div class="match-table" id="matchTable" aria-label="Prediction table"></div>
       </div>
     </section>
     <p class="hint" id="hint"></p>
@@ -752,8 +778,8 @@
     ];
 
     const starterRounds = [
-      { name: "Round of 32", done: 13, total: 16, current: true },
-      { name: "Round of 16", done: 0, total: 8, current: false },
+      { name: "Round of 32", done: 16, total: 16, current: false },
+      { name: "Round of 16", done: 1, total: 8, current: true },
       { name: "Quarter finals", done: 0, total: 4, current: false },
       { name: "Semi finals", done: 0, total: 2, current: false },
       { name: "3rd place play off", done: 0, total: 1, current: false },
@@ -884,11 +910,71 @@
       }
     ];
 
+    const starterRound16Matches = [
+      {
+        id: "canada-morocco-r16",
+        label: "Canada v Morocco",
+        score: "Morocco 3-0, RT",
+        espnEventId: "760502",
+        outcomes: {}
+      },
+      {
+        id: "paraguay-france-r16",
+        label: "Paraguay v France",
+        score: "Upcoming",
+        espnEventId: "760503",
+        outcomes: {}
+      },
+      {
+        id: "brazil-norway-r16",
+        label: "Brazil v Norway",
+        score: "Upcoming",
+        espnEventId: "760504",
+        outcomes: {}
+      },
+      {
+        id: "mexico-england-r16",
+        label: "Mexico v England",
+        score: "Upcoming",
+        espnEventId: "760505",
+        outcomes: {}
+      },
+      {
+        id: "portugal-spain-r16",
+        label: "Portugal v Spain",
+        score: "Upcoming",
+        espnEventId: "760506",
+        outcomes: {}
+      },
+      {
+        id: "usa-belgium-r16",
+        label: "USA v Belgium",
+        score: "Upcoming",
+        espnEventId: "760507",
+        outcomes: {}
+      },
+      {
+        id: "argentina-egypt-r16",
+        label: "Argentina v Egypt",
+        score: "Upcoming",
+        espnEventId: "760509",
+        outcomes: {}
+      },
+      {
+        id: "switzerland-colombia-r16",
+        label: "Switzerland v Colombia",
+        score: "Upcoming",
+        espnEventId: "760508",
+        outcomes: {}
+      }
+    ];
+
     const scoreboard = document.querySelector("#scoreboard");
     const mainTitle = document.querySelector("#mainTitle");
     const scoreboardView = document.querySelector("#scoreboardView");
     const tableView = document.querySelector("#tableView");
     const matchTable = document.querySelector("#matchTable");
+    const tableTabButtons = document.querySelectorAll(".table-tab");
     const viewToggleButton = document.querySelector("#viewToggleButton");
     const roundsList = document.querySelector("#rounds");
     const editorDialog = document.querySelector("#editorDialog");
@@ -916,8 +1002,10 @@
     let players = state.players;
     let rounds = state.rounds;
     let matches = state.matches;
+    let round16Matches = state.round16Matches;
     let previousRanks = state.previousRanks;
     let activeView = "scoreboard";
+    let activeTable = "round16";
     let pendingGitHubAction = "publish";
 
     setAdmin(isAdmin);
@@ -959,6 +1047,7 @@
         players = publishedState.players;
         rounds = publishedState.rounds;
         matches = publishedState.matches;
+        round16Matches = publishedState.round16Matches;
         previousRanks = publishedState.previousRanks;
         persistState();
         render();
@@ -972,6 +1061,7 @@
         players: structuredClone(starterPlayers),
         rounds: structuredClone(starterRounds),
         matches: structuredClone(starterMatches),
+        round16Matches: structuredClone(starterRound16Matches),
         previousRanks: {}
       };
     }
@@ -983,6 +1073,7 @@
           : structuredClone(starterPlayers),
         rounds: Array.isArray(nextState.rounds) ? nextState.rounds : structuredClone(starterRounds),
         matches: Array.isArray(nextState.matches) ? nextState.matches.map(normalizeMatch) : structuredClone(starterMatches),
+        round16Matches: Array.isArray(nextState.round16Matches) ? nextState.round16Matches.map(normalizeMatch) : structuredClone(starterRound16Matches),
         previousRanks: nextState.previousRanks && typeof nextState.previousRanks === "object" ? nextState.previousRanks : {}
       };
     }
@@ -1061,6 +1152,7 @@
         })),
         rounds,
         matches,
+        round16Matches,
         previousRanks
       };
     }
@@ -1138,6 +1230,22 @@
       return ranks;
     }
 
+    function tableMatches() {
+      return activeTable === "round32" ? matches : round16Matches;
+    }
+
+    function allMatches() {
+      return [...matches, ...round16Matches];
+    }
+
+    function setActiveTable(nextTable) {
+      activeTable = nextTable === "round32" ? "round32" : "round16";
+      tableTabButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.tableId === activeTable));
+      });
+      renderMatchTable();
+    }
+
     function renderTitle() {
       const letters = "Shalmoni".split("");
       const orderedPlayers = sortedPlayers();
@@ -1157,9 +1265,13 @@
 
     function renderMatchTable() {
       matchTable.innerHTML = "";
+      tableTabButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.tableId === activeTable));
+      });
+      matchTable.setAttribute("aria-label", `${activeTable === "round16" ? "Round of 16" : "Round of 32"} prediction table`);
       addMatchNode("match-head", "Game");
       playerNames.forEach((name) => addMatchNode("match-head player-head", playerProfiles[name]?.emoji || playerLabels[name] || name));
-      matches.forEach((match, matchIndex) => {
+      tableMatches().forEach((match) => {
         const game = document.createElement("div");
         game.className = "match-game";
         game.innerHTML = `<span class="match-title"></span><span class="match-score"></span>`;
@@ -1236,7 +1348,7 @@
     function recalculatePlayersFromMatches() {
       players = playerNames.map((name) => {
         const totals = { name, stars: 0, correct: 0, wrong: 0 };
-        matches.forEach((match) => {
+        allMatches().forEach((match) => {
           const outcome = match.outcomes[name];
           if (outcome === "perfect") totals.stars += 1;
           if (outcome === "correct") totals.correct += 1;
@@ -1509,6 +1621,10 @@
 
     viewToggleButton.addEventListener("click", () => {
       switchView(activeView === "scoreboard" ? "table" : "scoreboard");
+    });
+
+    tableTabButtons.forEach((button) => {
+      button.addEventListener("click", () => setActiveTable(button.dataset.tableId));
     });
 
     document.querySelector("#editButton").addEventListener("click", () => {

@@ -24,7 +24,10 @@ jobs:
             });
 
             const data = JSON.parse(Buffer.from(existing.data.content, "base64").toString("utf8"));
-            const matches = Array.isArray(data.matches) ? data.matches : [];
+            const matches = [
+              ...(Array.isArray(data.round16Matches) ? data.round16Matches : []),
+              ...(Array.isArray(data.matches) ? data.matches : [])
+            ];
             const upcomingMatches = matches.filter((match) => {
               return match.score === "Upcoming" && match.espnEventId;
             });
@@ -91,7 +94,12 @@ jobs:
 
             const roundOf32 = data.rounds?.find((round) => round.name === "Round of 32");
             if (roundOf32) {
-              roundOf32.done = matches.filter((match) => match.score && match.score !== "Upcoming").length;
+              roundOf32.done = (Array.isArray(data.matches) ? data.matches : []).filter((match) => match.score && match.score !== "Upcoming").length;
+            }
+
+            const roundOf16 = data.rounds?.find((round) => round.name === "Round of 16");
+            if (roundOf16) {
+              roundOf16.done = (Array.isArray(data.round16Matches) ? data.round16Matches : []).filter((match) => match.score && match.score !== "Upcoming").length;
             }
 
             const content = JSON.stringify(data, null, 2) + "\n";

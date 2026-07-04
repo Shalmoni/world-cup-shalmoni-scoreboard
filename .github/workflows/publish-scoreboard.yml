@@ -25,6 +25,7 @@ jobs:
               players: state.players,
               rounds: state.rounds,
               matches: Array.isArray(state.matches) ? state.matches : [],
+              round16Matches: Array.isArray(state.round16Matches) ? state.round16Matches : [],
               previousRanks: state.previousRanks && typeof state.previousRanks === "object" ? state.previousRanks : {}
             }, null, 2) + "\n";
 
