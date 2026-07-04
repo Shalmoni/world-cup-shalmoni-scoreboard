@@ -52,7 +52,7 @@
   "rounds": [
     {
       "current": true,
-      "done": 13,
+      "done": 16,
       "name": "Round of 32",
       "total": 16
     },
@@ -278,21 +278,21 @@
       "id": "australia-egypt",
       "label": "Australia v Egypt",
       "outcomes": {},
-      "score": "Upcoming"
+      "score": "Australia 1-1, pens"
     },
     {
       "espnEventId": "760500",
       "id": "argentina-cabo-verde",
       "label": "Argentina v Cabo Verde",
       "outcomes": {},
-      "score": "Upcoming"
+      "score": "Argentina 3-2, ET"
     },
     {
       "espnEventId": "760501",
       "id": "colombia-ghana",
       "label": "Colombia v Ghana",
       "outcomes": {},
-      "score": "Upcoming"
+      "score": "Colombia 1-0, RT"
     }
   ],
   "previousRanks": {
