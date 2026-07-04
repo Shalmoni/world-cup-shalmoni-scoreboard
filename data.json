@@ -1,52 +1,52 @@
 {
   "players": [
     {
-      "correct": 3,
+      "correct": 4,
       "name": "Otsar",
-      "stars": 8,
-      "wrong": 2
-    },
-    {
-      "correct": 5,
-      "name": "Coral",
-      "stars": 3,
-      "wrong": 4
-    },
-    {
-      "correct": 1,
-      "name": "David",
-      "stars": 8,
-      "wrong": 4
-    },
-    {
-      "correct": 2,
-      "name": "Yosef",
-      "stars": 8,
-      "wrong": 3
-    },
-    {
-      "correct": 1,
-      "name": "Shira",
       "stars": 10,
       "wrong": 2
     },
     {
+      "correct": 6,
+      "name": "Coral",
+      "stars": 4,
+      "wrong": 5
+    },
+    {
       "correct": 3,
+      "name": "David",
+      "stars": 9,
+      "wrong": 4
+    },
+    {
+      "correct": 4,
+      "name": "Yosef",
+      "stars": 9,
+      "wrong": 3
+    },
+    {
+      "correct": 2,
+      "name": "Shira",
+      "stars": 11,
+      "wrong": 3
+    },
+    {
+      "correct": 4,
       "name": "Yonatan",
-      "stars": 8,
+      "stars": 10,
       "wrong": 2
     },
     {
-      "correct": 0,
+      "correct": 2,
       "name": "Iris",
       "stars": 2,
-      "wrong": 1
+      "wrong": 2
     },
     {
-      "correct": 0,
+      "correct": 1,
       "name": "Becky",
-      "stars": 0,
-      "wrong": 1
+      "stars": 1,
+      "wrong": 2
     }
   ],
   "rounds": [
@@ -277,21 +277,48 @@
       "espnEventId": "760499",
       "id": "australia-egypt",
       "label": "Australia v Egypt",
-      "outcomes": {},
+      "outcomes": {
+        "Becky": "wrong",
+        "Coral": "wrong",
+        "David": "correct",
+        "Iris": "correct",
+        "Otsar": "perfect",
+        "Shira": "wrong",
+        "Yonatan": "perfect",
+        "Yosef": "correct"
+      },
       "score": "Australia 1-1, pens"
     },
     {
       "espnEventId": "760500",
       "id": "argentina-cabo-verde",
       "label": "Argentina v Cabo Verde",
-      "outcomes": {},
+      "outcomes": {
+        "Becky": "perfect",
+        "Coral": "correct",
+        "David": "correct",
+        "Iris": "correct",
+        "Otsar": "correct",
+        "Shira": "correct",
+        "Yonatan": "correct",
+        "Yosef": "correct"
+      },
       "score": "Argentina 3-2, ET"
     },
     {
       "espnEventId": "760501",
       "id": "colombia-ghana",
       "label": "Colombia v Ghana",
-      "outcomes": {},
+      "outcomes": {
+        "Becky": "correct",
+        "Coral": "perfect",
+        "David": "perfect",
+        "Iris": "wrong",
+        "Otsar": "perfect",
+        "Shira": "perfect",
+        "Yonatan": "perfect",
+        "Yosef": "perfect"
+      },
       "score": "Colombia 1-0, RT"
     }
   ],
@@ -300,9 +327,9 @@
     "Coral": 5,
     "David": 4,
     "Iris": 6,
-    "Otsar": 2,
+    "Otsar": 1,
     "Shira": 1,
-    "Yonatan": 2,
-    "Yosef": 3
+    "Yonatan": 3,
+    "Yosef": 2
   }
 }
