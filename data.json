@@ -3,11 +3,11 @@
     {
       "correct": 4,
       "name": "Otsar",
-      "stars": 10,
+      "stars": 11,
       "wrong": 2
     },
     {
-      "correct": 6,
+      "correct": 7,
       "name": "Coral",
       "stars": 4,
       "wrong": 5
@@ -16,16 +16,16 @@
       "correct": 3,
       "name": "David",
       "stars": 9,
-      "wrong": 4
+      "wrong": 5
     },
     {
       "correct": 4,
       "name": "Yosef",
-      "stars": 9,
+      "stars": 10,
       "wrong": 3
     },
     {
-      "correct": 2,
+      "correct": 3,
       "name": "Shira",
       "stars": 11,
       "wrong": 3
@@ -33,20 +33,20 @@
     {
       "correct": 4,
       "name": "Yonatan",
-      "stars": 10,
+      "stars": 11,
       "wrong": 2
     },
     {
       "correct": 2,
       "name": "Iris",
-      "stars": 2,
+      "stars": 3,
       "wrong": 2
     },
     {
       "correct": 1,
       "name": "Becky",
       "stars": 1,
-      "wrong": 2
+      "wrong": 3
     }
   ],
   "rounds": [
@@ -327,7 +327,16 @@
       "espnEventId": "760502",
       "id": "canada-morocco-r16",
       "label": "Canada v Morocco",
-      "outcomes": {},
+      "outcomes": {
+        "Becky": "wrong",
+        "Coral": "correct",
+        "David": "wrong",
+        "Iris": "perfect",
+        "Otsar": "perfect",
+        "Shira": "correct",
+        "Yonatan": "perfect",
+        "Yosef": "perfect"
+      },
       "score": "Morocco 3-0, RT"
     },
     {
@@ -386,8 +395,8 @@
     "David": 4,
     "Iris": 6,
     "Otsar": 1,
-    "Shira": 1,
-    "Yonatan": 3,
-    "Yosef": 2
+    "Shira": 2,
+    "Yonatan": 1,
+    "Yosef": 3
   }
 }
