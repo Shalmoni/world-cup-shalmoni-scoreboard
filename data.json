@@ -3,44 +3,44 @@
     {
       "correct": 4,
       "name": "Otsar",
-      "stars": 11,
+      "stars": 12,
       "wrong": 2
     },
     {
       "correct": 7,
       "name": "Coral",
-      "stars": 4,
+      "stars": 5,
       "wrong": 5
     },
     {
       "correct": 3,
       "name": "David",
-      "stars": 9,
+      "stars": 10,
       "wrong": 5
     },
     {
       "correct": 4,
       "name": "Yosef",
-      "stars": 10,
+      "stars": 11,
       "wrong": 3
     },
     {
       "correct": 3,
       "name": "Shira",
-      "stars": 11,
+      "stars": 12,
       "wrong": 3
     },
     {
       "correct": 4,
       "name": "Yonatan",
-      "stars": 11,
+      "stars": 12,
       "wrong": 2
     },
     {
       "correct": 2,
       "name": "Iris",
       "stars": 3,
-      "wrong": 2
+      "wrong": 3
     },
     {
       "correct": 2,
@@ -343,7 +343,15 @@
       "espnEventId": "760503",
       "id": "paraguay-france-r16",
       "label": "Paraguay v France",
-      "outcomes": {},
+      "outcomes": {
+        "Coral": "perfect",
+        "David": "perfect",
+        "Iris": "wrong",
+        "Otsar": "perfect",
+        "Shira": "perfect",
+        "Yonatan": "perfect",
+        "Yosef": "perfect"
+      },
       "score": "Upcoming"
     },
     {
