@@ -1390,13 +1390,12 @@
           <span class="round-count">${Number(round.done) || 0}/${Number(round.total) || 0}</span>
         `;
         item.querySelector("span").textContent = roundName;
-        if (tableId) {
+        if (activeView === "table" && tableId) {
           item.tabIndex = 0;
           item.setAttribute("role", "button");
           item.setAttribute("aria-pressed", String(isSelectedTable));
           item.addEventListener("click", () => {
             setActiveTable(tableId);
-            switchView("table");
           });
           item.addEventListener("keydown", (event) => {
             if (event.key === "Enter" || event.key === " ") {
