@@ -58,7 +58,7 @@
     },
     {
       "current": true,
-      "done": 2,
+      "done": 3,
       "name": "Round of 16",
       "total": 8
     },
@@ -359,7 +359,7 @@
       "id": "brazil-norway-r16",
       "label": "Brazil v Norway",
       "outcomes": {},
-      "score": "Upcoming"
+      "score": "Brazil 1-2, RT"
     },
     {
       "espnEventId": "760505",
