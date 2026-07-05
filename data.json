@@ -4,43 +4,43 @@
       "correct": 4,
       "name": "Otsar",
       "stars": 12,
-      "wrong": 2
+      "wrong": 3
     },
     {
       "correct": 7,
       "name": "Coral",
       "stars": 5,
-      "wrong": 5
+      "wrong": 6
     },
     {
       "correct": 3,
       "name": "David",
-      "stars": 10,
+      "stars": 11,
       "wrong": 5
     },
     {
       "correct": 4,
       "name": "Yosef",
-      "stars": 11,
+      "stars": 12,
       "wrong": 3
     },
     {
       "correct": 3,
       "name": "Shira",
       "stars": 12,
-      "wrong": 3
+      "wrong": 4
     },
     {
       "correct": 4,
       "name": "Yonatan",
       "stars": 12,
-      "wrong": 2
+      "wrong": 3
     },
     {
       "correct": 2,
       "name": "Iris",
       "stars": 3,
-      "wrong": 3
+      "wrong": 4
     },
     {
       "correct": 2,
@@ -58,7 +58,7 @@
     },
     {
       "current": true,
-      "done": 3,
+      "done": 2,
       "name": "Round of 16",
       "total": 8
     },
@@ -101,6 +101,7 @@
         "Yonatan": "correct",
         "Yosef": "perfect"
       },
+      "round": "",
       "score": "Canada 1-0, RT"
     },
     {
@@ -115,6 +116,7 @@
         "Yonatan": "perfect",
         "Yosef": "perfect"
       },
+      "round": "",
       "score": "Brazil 2-1, RT"
     },
     {
@@ -129,6 +131,7 @@
         "Yonatan": "wrong",
         "Yosef": "wrong"
       },
+      "round": "",
       "score": "1-1, Paraguay 4-3 pens"
     },
     {
@@ -143,6 +146,7 @@
         "Yonatan": "perfect",
         "Yosef": "correct"
       },
+      "round": "",
       "score": "1-1, Morocco 3-2 pens"
     },
     {
@@ -156,6 +160,7 @@
         "Yonatan": "perfect",
         "Yosef": "perfect"
       },
+      "round": "",
       "score": "Norway 2-1, RT"
     },
     {
@@ -170,6 +175,7 @@
         "Yonatan": "perfect",
         "Yosef": "perfect"
       },
+      "round": "",
       "score": "France 3-0, RT"
     },
     {
@@ -184,6 +190,7 @@
         "Yonatan": "correct",
         "Yosef": "perfect"
       },
+      "round": "",
       "score": "Mexico 2-0, RT"
     },
     {
@@ -198,6 +205,7 @@
         "Yonatan": "perfect",
         "Yosef": "perfect"
       },
+      "round": "",
       "score": "England 2-1, RT"
     },
     {
@@ -212,6 +220,7 @@
         "Yonatan": "perfect",
         "Yosef": "correct"
       },
+      "round": "",
       "score": "Belgium 3-2, RT"
     },
     {
@@ -226,6 +235,7 @@
         "Yonatan": "perfect",
         "Yosef": "perfect"
       },
+      "round": "",
       "score": "USA 2-0, RT"
     },
     {
@@ -241,6 +251,7 @@
         "Yonatan": "perfect",
         "Yosef": "perfect"
       },
+      "round": "",
       "score": "Spain 3-0, RT"
     },
     {
@@ -256,6 +267,7 @@
         "Yonatan": "correct",
         "Yosef": "wrong"
       },
+      "round": "",
       "score": "Portugal 2-1, RT"
     },
     {
@@ -271,6 +283,7 @@
         "Yonatan": "wrong",
         "Yosef": "wrong"
       },
+      "round": "",
       "score": "Switzerland 2-0, RT"
     },
     {
@@ -287,6 +300,7 @@
         "Yonatan": "perfect",
         "Yosef": "correct"
       },
+      "round": "",
       "score": "Australia 1-1, pens"
     },
     {
@@ -303,6 +317,7 @@
         "Yonatan": "correct",
         "Yosef": "correct"
       },
+      "round": "",
       "score": "Argentina 3-2, ET"
     },
     {
@@ -319,6 +334,7 @@
         "Yonatan": "perfect",
         "Yosef": "perfect"
       },
+      "round": "",
       "score": "Colombia 1-0, RT"
     }
   ],
@@ -337,6 +353,7 @@
         "Yonatan": "perfect",
         "Yosef": "perfect"
       },
+      "round": "",
       "score": "Morocco 3-0, RT"
     },
     {
@@ -352,20 +369,31 @@
         "Yonatan": "perfect",
         "Yosef": "perfect"
       },
+      "round": "",
       "score": "Paraguay 0-1, RT"
     },
     {
       "espnEventId": "760504",
       "id": "brazil-norway-r16",
       "label": "Brazil v Norway",
-      "outcomes": {},
-      "score": "Brazil 1-2, RT"
+      "outcomes": {
+        "Coral": "wrong",
+        "David": "perfect",
+        "Iris": "wrong",
+        "Otsar": "wrong",
+        "Shira": "wrong",
+        "Yonatan": "wrong",
+        "Yosef": "perfect"
+      },
+      "round": "",
+      "score": "Upcoming"
     },
     {
       "espnEventId": "760505",
       "id": "mexico-england-r16",
       "label": "Mexico v England",
       "outcomes": {},
+      "round": "",
       "score": "Upcoming"
     },
     {
@@ -373,6 +401,7 @@
       "id": "portugal-spain-r16",
       "label": "Portugal v Spain",
       "outcomes": {},
+      "round": "",
       "score": "Upcoming"
     },
     {
@@ -380,6 +409,7 @@
       "id": "usa-belgium-r16",
       "label": "USA v Belgium",
       "outcomes": {},
+      "round": "",
       "score": "Upcoming"
     },
     {
@@ -387,6 +417,7 @@
       "id": "argentina-egypt-r16",
       "label": "Argentina v Egypt",
       "outcomes": {},
+      "round": "",
       "score": "Upcoming"
     },
     {
@@ -394,6 +425,7 @@
       "id": "switzerland-colombia-r16",
       "label": "Switzerland v Colombia",
       "outcomes": {},
+      "round": "",
       "score": "Upcoming"
     }
   ],
@@ -402,9 +434,9 @@
     "Coral": 5,
     "David": 4,
     "Iris": 6,
-    "Otsar": 1,
-    "Shira": 2,
-    "Yonatan": 1,
-    "Yosef": 3
+    "Otsar": 2,
+    "Shira": 3,
+    "Yonatan": 2,
+    "Yosef": 1
   }
 }
