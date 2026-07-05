@@ -1073,6 +1073,7 @@
         label: match.label || "Match",
         score: match.score || "",
         espnEventId: match.espnEventId || "",
+        round: match.round || "",
         outcomes: { ...(match.outcomes || {}) }
       };
     }
@@ -1128,7 +1129,32 @@
       if (player.legacyPoints !== null && player.legacyPoints !== undefined) {
         return Number(player.legacyPoints) || 0;
       }
-      return (Number(player.stars) || 0) * 5 + (Number(player.correct) || 0) * 3 + (Number(player.wrong) || 0);
+      if (!hasMatchOutcomes()) {
+        return (Number(player.stars) || 0) * 5 + (Number(player.correct) || 0) * 3 + (Number(player.wrong) || 0);
+      }
+      return pointsForPlayer(player.name);
+    }
+
+    function hasMatchOutcomes() {
+      return allMatches().some((match) => {
+        return match.outcomes && Object.values(match.outcomes).some(Boolean);
+      });
+    }
+
+    function pointsForPlayer(playerName) {
+      return allMatches().reduce((total, match) => {
+        return total + outcomePoints(match.outcomes[playerName], match);
+      }, 0);
+    }
+
+    function scoringForMatch(match) {
+      if (match.round === "third-place" || match.round === "finals") {
+        return { perfect: 10, correct: 7, wrong: 0 };
+      }
+      if (match.round === "round32" || matches.some((entry) => entry.id === match.id)) {
+        return { perfect: 5, correct: 3, wrong: 1 };
+      }
+      return { perfect: 6, correct: 4, wrong: 0 };
     }
 
     function serializableState() {
@@ -1281,7 +1307,7 @@
               render();
               return;
             }
-            const message = `${playerName} / ${match.label}: ${outcomeLabel(outcome)} (${outcomePoints(outcome)} pts). Final: ${match.score}`;
+            const message = `${playerName} / ${match.label}: ${outcomeLabel(outcome)} (${outcomePoints(outcome, match)} pts). Final: ${match.score}`;
             flashHint(message);
             showToast(message);
           });
@@ -1305,8 +1331,8 @@
       return { perfect: "Perfect", correct: "Correct", wrong: "Wrong" }[outcome] || "No pick";
     }
 
-    function outcomePoints(outcome) {
-      return { perfect: 5, correct: 3, wrong: 1 }[outcome] || 0;
+    function outcomePoints(outcome, match = {}) {
+      return scoringForMatch(match)[outcome] || 0;
     }
 
     function nextOutcome(outcome) {
