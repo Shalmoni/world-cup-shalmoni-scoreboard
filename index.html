@@ -11,7 +11,7 @@
       --ink: #fff;
       --muted: #fff;
       --dim: #777;
-      --past: #b8b8b8;
+      --past: #fff;
       --line: #fff;
       --card: #000;
       --accent: #fff;
@@ -1259,6 +1259,12 @@
       renderMatchTable();
     }
 
+    function currentTableId() {
+      const currentRound = rounds.find((round) => round.current);
+      if (currentRound?.name === "Round of 32") return "round32";
+      return "round16";
+    }
+
     function renderTitle() {
       const letters = "Shalmoni".split("");
       const orderedPlayers = sortedPlayers();
@@ -1649,7 +1655,13 @@
     document.querySelector("#passwordCancelButton").addEventListener("click", () => passwordDialog.close());
 
     viewToggleButton.addEventListener("click", () => {
-      switchView(activeView === "scoreboard" ? "table" : "scoreboard");
+      if (activeView === "scoreboard") {
+        activeTable = currentTableId();
+        switchView("table");
+        renderMatchTable();
+        return;
+      }
+      switchView("scoreboard");
     });
 
     document.querySelector("#editButton").addEventListener("click", () => {
