@@ -996,6 +996,7 @@
     let activeView = "scoreboard";
     let activeTable = "round16";
     let pendingGitHubAction = "publish";
+    let rankSnapshotLocked = false;
 
     setAdmin(isAdmin);
     trackVisit();
@@ -1245,6 +1246,12 @@
       return ranks;
     }
 
+    function captureRankSnapshotForEdit() {
+      if (rankSnapshotLocked) return;
+      previousRanks = currentRankMap();
+      rankSnapshotLocked = true;
+    }
+
     function tableMatches() {
       return activeTable === "round32" ? matches : round16Matches;
     }
@@ -1305,7 +1312,7 @@
           cell.setAttribute("aria-label", `${playerName}, ${match.label}, ${outcome || "not played"}`);
           cell.addEventListener("click", () => {
             if (isAdmin) {
-              previousRanks = currentRankMap();
+              captureRankSnapshotForEdit();
               const next = nextOutcome(outcome);
               match.outcomes[playerName] = next;
               applyOutcomeDelta(playerName, outcome, next);
@@ -1517,6 +1524,7 @@
 
     function setAdmin(nextAdmin) {
       isAdmin = nextAdmin;
+      if (isAdmin) rankSnapshotLocked = false;
       document.body.dataset.admin = String(isAdmin);
       toolbar.classList.toggle("viewer", !isAdmin);
       sessionStorage.setItem("shalmoni-scoreboard-admin", String(isAdmin));
@@ -1600,6 +1608,7 @@
       try {
         flashHint("Publishing to GitHub...");
         await publishToGitHub(token);
+        rankSnapshotLocked = false;
         setAdmin(false);
         hint.textContent = "Published.";
       } catch (error) {
@@ -1710,6 +1719,7 @@
           hint.textContent = "Score update started.";
         } else {
           await publishToGitHub(token);
+          rankSnapshotLocked = false;
           setAdmin(false);
           hint.textContent = "Published.";
         }
