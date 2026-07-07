@@ -21,15 +21,8 @@ jobs:
               return;
             }
 
-            const content = JSON.stringify({
-              players: state.players,
-              rounds: state.rounds,
-              matches: Array.isArray(state.matches) ? state.matches : [],
-              round16Matches: Array.isArray(state.round16Matches) ? state.round16Matches : [],
-              previousRanks: state.previousRanks && typeof state.previousRanks === "object" ? state.previousRanks : {}
-            }, null, 2) + "\n";
-
             let sha;
+            let existingData = {};
             try {
               const existing = await github.rest.repos.getContent({
                 owner: context.repo.owner,
@@ -38,9 +31,35 @@ jobs:
                 ref: "main"
               });
               sha = existing.data.sha;
+              existingData = JSON.parse(Buffer.from(existing.data.content, "base64").toString("utf8"));
             } catch (error) {
               if (error.status !== 404) throw error;
             }
+
+            function preserveFinalScores(incomingMatches, existingMatches) {
+              const existingById = new Map((Array.isArray(existingMatches) ? existingMatches : []).map((match) => [match.id, match]));
+              return (Array.isArray(incomingMatches) ? incomingMatches : []).map((match) => {
+                const existing = existingById.get(match.id);
+                if (match.score === "Upcoming" && existing?.score && existing.score !== "Upcoming") {
+                  return { ...match, score: existing.score };
+                }
+                return match;
+              });
+            }
+
+            const nextRounds = state.rounds.map((round) => {
+              const existingRound = (existingData.rounds || []).find((entry) => entry.name === round.name);
+              if (!existingRound) return round;
+              return { ...round, done: Math.max(Number(round.done) || 0, Number(existingRound.done) || 0) };
+            });
+
+            const content = JSON.stringify({
+              players: state.players,
+              rounds: nextRounds,
+              matches: preserveFinalScores(state.matches, existingData.matches),
+              round16Matches: preserveFinalScores(state.round16Matches, existingData.round16Matches),
+              previousRanks: state.previousRanks && typeof state.previousRanks === "object" ? state.previousRanks : {}
+            }, null, 2) + "\n";
 
             await github.rest.repos.createOrUpdateFileContents({
               owner: context.repo.owner,

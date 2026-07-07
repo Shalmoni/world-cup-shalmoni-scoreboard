@@ -1627,7 +1627,7 @@
       try {
         flashHint("Starting GitHub score update...");
         await triggerScoreUpdate(token);
-        hint.textContent = "Score update started.";
+        hint.textContent = "Score update started. Do not publish; refresh in a minute.";
       } catch (error) {
         sessionStorage.removeItem("shalmoni-github-token");
         showGitHubTokenDialog("scores");
@@ -1716,7 +1716,7 @@
         sessionStorage.setItem("shalmoni-github-token", token);
         if (pendingGitHubAction === "scores") {
           await triggerScoreUpdate(token);
-          hint.textContent = "Score update started.";
+          hint.textContent = "Score update started. Do not publish; refresh in a minute.";
         } else {
           await publishToGitHub(token);
           rankSnapshotLocked = false;
