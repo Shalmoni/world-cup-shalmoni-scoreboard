@@ -3,43 +3,43 @@
     {
       "correct": 4,
       "name": "Otsar",
-      "stars": 14,
+      "stars": 15,
       "wrong": 4
     },
     {
       "correct": 8,
       "name": "Coral",
-      "stars": 6,
+      "stars": 7,
       "wrong": 7
     },
     {
       "correct": 3,
       "name": "David",
-      "stars": 12,
+      "stars": 13,
       "wrong": 7
     },
     {
       "correct": 4,
       "name": "Yosef",
-      "stars": 15,
+      "stars": 16,
       "wrong": 3
     },
     {
       "correct": 4,
       "name": "Shira",
-      "stars": 13,
+      "stars": 14,
       "wrong": 4
     },
     {
       "correct": 5,
       "name": "Yonatan",
-      "stars": 13,
+      "stars": 14,
       "wrong": 4
     },
     {
       "correct": 2,
       "name": "Iris",
-      "stars": 5,
+      "stars": 6,
       "wrong": 5
     },
     {
@@ -440,7 +440,15 @@
       "espnEventId": "760509",
       "id": "argentina-egypt-r16",
       "label": "Argentina v Egypt",
-      "outcomes": {},
+      "outcomes": {
+        "Coral": "perfect",
+        "David": "perfect",
+        "Iris": "perfect",
+        "Otsar": "perfect",
+        "Shira": "perfect",
+        "Yonatan": "perfect",
+        "Yosef": "perfect"
+      },
       "round": "",
       "score": "Argentina 3-2, RT"
     },
@@ -454,13 +462,13 @@
     }
   ],
   "previousRanks": {
-    "Becky": 7,
-    "Coral": 5,
-    "David": 4,
-    "Iris": 6,
-    "Otsar": 3,
-    "Shira": 2,
-    "Yonatan": 2,
+    "Becky": 8,
+    "Coral": 6,
+    "David": 5,
+    "Iris": 7,
+    "Otsar": 2,
+    "Shira": 4,
+    "Yonatan": 3,
     "Yosef": 1
   }
 }
