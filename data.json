@@ -57,13 +57,13 @@
       "total": 16
     },
     {
-      "current": true,
+      "current": false,
       "done": 8,
       "name": "Round of 16",
       "total": 8
     },
     {
-      "current": false,
+      "current": true,
       "done": 0,
       "name": "Quarter finals",
       "total": 4
@@ -467,6 +467,40 @@
       },
       "round": "",
       "score": "Switzerland 0-0, pens"
+    }
+  ],
+  "quarterFinalMatches": [
+    {
+      "espnEventId": "760510",
+      "id": "france-morocco-qf",
+      "label": "France v Morocco",
+      "outcomes": {},
+      "round": "quarter-finals",
+      "score": "Upcoming"
+    },
+    {
+      "espnEventId": "760511",
+      "id": "spain-belgium-qf",
+      "label": "Spain v Belgium",
+      "outcomes": {},
+      "round": "quarter-finals",
+      "score": "Upcoming"
+    },
+    {
+      "espnEventId": "760512",
+      "id": "norway-england-qf",
+      "label": "Norway v England",
+      "outcomes": {},
+      "round": "quarter-finals",
+      "score": "Upcoming"
+    },
+    {
+      "espnEventId": "760513",
+      "id": "argentina-switzerland-qf",
+      "label": "Argentina v Switzerland",
+      "outcomes": {},
+      "round": "quarter-finals",
+      "score": "Upcoming"
     }
   ],
   "previousRanks": {

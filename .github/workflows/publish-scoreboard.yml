@@ -58,6 +58,7 @@ jobs:
               rounds: nextRounds,
               matches: preserveFinalScores(state.matches, existingData.matches),
               round16Matches: preserveFinalScores(state.round16Matches, existingData.round16Matches),
+              quarterFinalMatches: preserveFinalScores(state.quarterFinalMatches, existingData.quarterFinalMatches),
               previousRanks: state.previousRanks && typeof state.previousRanks === "object" ? state.previousRanks : {}
             }, null, 2) + "\n";
 

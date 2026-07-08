@@ -25,6 +25,7 @@ jobs:
 
             const data = JSON.parse(Buffer.from(existing.data.content, "base64").toString("utf8"));
             const matches = [
+              ...(Array.isArray(data.quarterFinalMatches) ? data.quarterFinalMatches : []),
               ...(Array.isArray(data.round16Matches) ? data.round16Matches : []),
               ...(Array.isArray(data.matches) ? data.matches : [])
             ];
@@ -100,6 +101,11 @@ jobs:
             const roundOf16 = data.rounds?.find((round) => round.name === "Round of 16");
             if (roundOf16) {
               roundOf16.done = (Array.isArray(data.round16Matches) ? data.round16Matches : []).filter((match) => match.score && match.score !== "Upcoming").length;
+            }
+
+            const quarterFinals = data.rounds?.find((round) => round.name === "Quarter finals");
+            if (quarterFinals) {
+              quarterFinals.done = (Array.isArray(data.quarterFinalMatches) ? data.quarterFinalMatches : []).filter((match) => match.score && match.score !== "Upcoming").length;
             }
 
             const content = JSON.stringify(data, null, 2) + "\n";
