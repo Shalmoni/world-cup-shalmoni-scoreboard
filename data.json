@@ -4,43 +4,43 @@
       "correct": 4,
       "name": "Otsar",
       "stars": 15,
-      "wrong": 4
+      "wrong": 5
     },
     {
       "correct": 8,
       "name": "Coral",
       "stars": 7,
-      "wrong": 7
+      "wrong": 8
     },
     {
       "correct": 3,
       "name": "David",
       "stars": 13,
-      "wrong": 7
+      "wrong": 8
     },
     {
       "correct": 4,
       "name": "Yosef",
       "stars": 16,
-      "wrong": 3
+      "wrong": 4
     },
     {
       "correct": 4,
       "name": "Shira",
-      "stars": 14,
+      "stars": 15,
       "wrong": 4
     },
     {
       "correct": 5,
       "name": "Yonatan",
       "stars": 14,
-      "wrong": 4
+      "wrong": 5
     },
     {
       "correct": 2,
       "name": "Iris",
       "stars": 6,
-      "wrong": 5
+      "wrong": 6
     },
     {
       "correct": 2,
@@ -456,7 +456,15 @@
       "espnEventId": "760508",
       "id": "switzerland-colombia-r16",
       "label": "Switzerland v Colombia",
-      "outcomes": {},
+      "outcomes": {
+        "Coral": "wrong",
+        "David": "wrong",
+        "Iris": "wrong",
+        "Otsar": "wrong",
+        "Shira": "perfect",
+        "Yonatan": "wrong",
+        "Yosef": "wrong"
+      },
       "round": "",
       "score": "Upcoming"
     }
