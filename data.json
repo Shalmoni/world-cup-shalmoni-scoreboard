@@ -3,43 +3,43 @@
     {
       "correct": 4,
       "name": "Otsar",
-      "stars": 15,
+      "stars": 16,
       "wrong": 5
     },
     {
       "correct": 8,
       "name": "Coral",
-      "stars": 7,
+      "stars": 8,
       "wrong": 8
     },
     {
       "correct": 3,
       "name": "David",
-      "stars": 13,
+      "stars": 14,
       "wrong": 8
     },
     {
       "correct": 4,
       "name": "Yosef",
-      "stars": 16,
+      "stars": 17,
       "wrong": 4
     },
     {
       "correct": 4,
       "name": "Shira",
-      "stars": 15,
+      "stars": 16,
       "wrong": 4
     },
     {
       "correct": 5,
       "name": "Yonatan",
-      "stars": 14,
+      "stars": 15,
       "wrong": 5
     },
     {
       "correct": 2,
       "name": "Iris",
-      "stars": 6,
+      "stars": 7,
       "wrong": 6
     },
     {
@@ -474,7 +474,15 @@
       "espnEventId": "760510",
       "id": "france-morocco-qf",
       "label": "France v Morocco",
-      "outcomes": {},
+      "outcomes": {
+        "Coral": "perfect",
+        "David": "perfect",
+        "Iris": "perfect",
+        "Otsar": "perfect",
+        "Shira": "perfect",
+        "Yonatan": "perfect",
+        "Yosef": "perfect"
+      },
       "round": "quarter-finals",
       "score": "Upcoming"
     },
@@ -508,9 +516,9 @@
     "Coral": 6,
     "David": 5,
     "Iris": 7,
-    "Otsar": 2,
-    "Shira": 4,
-    "Yonatan": 3,
+    "Otsar": 3,
+    "Shira": 2,
+    "Yonatan": 4,
     "Yosef": 1
   }
 }
