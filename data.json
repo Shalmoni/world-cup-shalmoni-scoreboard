@@ -64,7 +64,7 @@
     },
     {
       "current": true,
-      "done": 0,
+      "done": 1,
       "name": "Quarter finals",
       "total": 4
     },
@@ -484,7 +484,7 @@
         "Yosef": "perfect"
       },
       "round": "quarter-finals",
-      "score": "Upcoming"
+      "score": "France 2-0, RT"
     },
     {
       "espnEventId": "760511",
