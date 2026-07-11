@@ -3,44 +3,44 @@
     {
       "correct": 4,
       "name": "Otsar",
-      "stars": 16,
+      "stars": 18,
       "wrong": 5
     },
     {
       "correct": 8,
       "name": "Coral",
-      "stars": 8,
-      "wrong": 8
+      "stars": 9,
+      "wrong": 9
     },
     {
       "correct": 3,
       "name": "David",
-      "stars": 14,
-      "wrong": 8
+      "stars": 15,
+      "wrong": 9
     },
     {
       "correct": 4,
       "name": "Yosef",
-      "stars": 17,
-      "wrong": 4
+      "stars": 18,
+      "wrong": 5
     },
     {
       "correct": 4,
       "name": "Shira",
-      "stars": 16,
-      "wrong": 4
+      "stars": 17,
+      "wrong": 5
     },
     {
-      "correct": 5,
+      "correct": 6,
       "name": "Yonatan",
-      "stars": 15,
+      "stars": 16,
       "wrong": 5
     },
     {
       "correct": 2,
       "name": "Iris",
-      "stars": 7,
-      "wrong": 6
+      "stars": 8,
+      "wrong": 7
     },
     {
       "correct": 2,
@@ -64,7 +64,7 @@
     },
     {
       "current": true,
-      "done": 1,
+      "done": 3,
       "name": "Quarter finals",
       "total": 4
     },
@@ -490,7 +490,15 @@
       "espnEventId": "760511",
       "id": "spain-belgium-qf",
       "label": "Spain v Belgium",
-      "outcomes": {},
+      "outcomes": {
+        "Coral": "perfect",
+        "David": "perfect",
+        "Iris": "perfect",
+        "Otsar": "perfect",
+        "Shira": "perfect",
+        "Yonatan": "perfect",
+        "Yosef": "perfect"
+      },
       "round": "quarter-finals",
       "score": "Upcoming"
     },
@@ -498,7 +506,15 @@
       "espnEventId": "760512",
       "id": "norway-england-qf",
       "label": "Norway v England",
-      "outcomes": {},
+      "outcomes": {
+        "Coral": "wrong",
+        "David": "wrong",
+        "Iris": "wrong",
+        "Otsar": "perfect",
+        "Shira": "wrong",
+        "Yonatan": "correct",
+        "Yosef": "wrong"
+      },
       "round": "quarter-finals",
       "score": "Upcoming"
     },
