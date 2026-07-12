@@ -1,43 +1,43 @@
 {
   "players": [
     {
-      "correct": 4,
+      "correct": 5,
       "name": "Otsar",
       "stars": 18,
       "wrong": 5
     },
     {
-      "correct": 8,
+      "correct": 9,
       "name": "Coral",
       "stars": 9,
       "wrong": 9
     },
     {
-      "correct": 3,
+      "correct": 4,
       "name": "David",
       "stars": 15,
       "wrong": 9
     },
     {
-      "correct": 4,
+      "correct": 5,
       "name": "Yosef",
       "stars": 18,
       "wrong": 5
     },
     {
-      "correct": 4,
+      "correct": 5,
       "name": "Shira",
       "stars": 17,
       "wrong": 5
     },
     {
-      "correct": 6,
+      "correct": 7,
       "name": "Yonatan",
       "stars": 16,
       "wrong": 5
     },
     {
-      "correct": 2,
+      "correct": 3,
       "name": "Iris",
       "stars": 8,
       "wrong": 7
@@ -63,13 +63,13 @@
       "total": 8
     },
     {
-      "current": true,
-      "done": 3,
+      "current": false,
+      "done": 4,
       "name": "Quarter finals",
       "total": 4
     },
     {
-      "current": false,
+      "current": true,
       "done": 0,
       "name": "Semi finals",
       "total": 2
@@ -522,19 +522,27 @@
       "espnEventId": "760513",
       "id": "argentina-switzerland-qf",
       "label": "Argentina v Switzerland",
-      "outcomes": {},
+      "outcomes": {
+        "Coral": "correct",
+        "David": "correct",
+        "Iris": "correct",
+        "Otsar": "correct",
+        "Shira": "correct",
+        "Yonatan": "correct",
+        "Yosef": "correct"
+      },
       "round": "quarter-finals",
       "score": "Upcoming"
     }
   ],
   "previousRanks": {
-    "Becky": 8,
-    "Coral": 6,
-    "David": 5,
-    "Iris": 7,
-    "Otsar": 3,
-    "Shira": 2,
-    "Yonatan": 4,
+    "Becky": 7,
+    "Coral": 5,
+    "David": 4,
+    "Iris": 6,
+    "Otsar": 1,
+    "Shira": 3,
+    "Yonatan": 2,
     "Yosef": 1
   }
 }
