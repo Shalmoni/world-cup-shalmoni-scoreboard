@@ -535,6 +535,24 @@
       "score": "Argentina 3-1, ET"
     }
   ],
+  "semiFinalMatches": [
+    {
+      "espnEventId": "760514",
+      "id": "france-spain-sf",
+      "label": "France v Spain",
+      "outcomes": {},
+      "round": "semi-finals",
+      "score": "Upcoming"
+    },
+    {
+      "espnEventId": "760515",
+      "id": "england-argentina-sf",
+      "label": "England v Argentina",
+      "outcomes": {},
+      "round": "semi-finals",
+      "score": "Upcoming"
+    }
+  ],
   "previousRanks": {
     "Becky": 7,
     "Coral": 5,

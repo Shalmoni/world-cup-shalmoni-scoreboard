@@ -770,8 +770,8 @@
     const starterRounds = [
       { name: "Round of 32", done: 16, total: 16, current: false },
       { name: "Round of 16", done: 8, total: 8, current: false },
-      { name: "Quarter finals", done: 0, total: 4, current: true },
-      { name: "Semi finals", done: 0, total: 2, current: false },
+      { name: "Quarter finals", done: 4, total: 4, current: false },
+      { name: "Semi finals", done: 0, total: 2, current: true },
       { name: "3rd place play off", done: 0, total: 1, current: false },
       { name: "Finals", done: 0, total: 1, current: false }
     ];
@@ -963,7 +963,7 @@
       {
         id: "france-morocco-qf",
         label: "France v Morocco",
-        score: "Upcoming",
+        score: "France 2-0, RT",
         espnEventId: "760510",
         round: "quarter-finals",
         outcomes: {}
@@ -971,7 +971,7 @@
       {
         id: "spain-belgium-qf",
         label: "Spain v Belgium",
-        score: "Upcoming",
+        score: "Spain 2-1, RT",
         espnEventId: "760511",
         round: "quarter-finals",
         outcomes: {}
@@ -979,7 +979,7 @@
       {
         id: "norway-england-qf",
         label: "Norway v England",
-        score: "Upcoming",
+        score: "Norway 1-2, ET",
         espnEventId: "760512",
         round: "quarter-finals",
         outcomes: {}
@@ -987,9 +987,28 @@
       {
         id: "argentina-switzerland-qf",
         label: "Argentina v Switzerland",
-        score: "Upcoming",
+        score: "Argentina 3-1, ET",
         espnEventId: "760513",
         round: "quarter-finals",
+        outcomes: {}
+      }
+    ];
+
+    const starterSemiFinalMatches = [
+      {
+        id: "france-spain-sf",
+        label: "France v Spain",
+        score: "Upcoming",
+        espnEventId: "760514",
+        round: "semi-finals",
+        outcomes: {}
+      },
+      {
+        id: "england-argentina-sf",
+        label: "England v Argentina",
+        score: "Upcoming",
+        espnEventId: "760515",
+        round: "semi-finals",
         outcomes: {}
       }
     ];
@@ -1028,9 +1047,10 @@
     let matches = state.matches;
     let round16Matches = state.round16Matches;
     let quarterFinalMatches = state.quarterFinalMatches;
+    let semiFinalMatches = state.semiFinalMatches;
     let previousRanks = state.previousRanks;
     let activeView = "scoreboard";
-    let activeTable = "quarter-finals";
+    let activeTable = "semi-finals";
     let pendingGitHubAction = "publish";
     let rankSnapshotLocked = false;
 
@@ -1075,6 +1095,7 @@
         matches = publishedState.matches;
         round16Matches = publishedState.round16Matches;
         quarterFinalMatches = publishedState.quarterFinalMatches;
+        semiFinalMatches = publishedState.semiFinalMatches;
         previousRanks = publishedState.previousRanks;
         persistState();
         render();
@@ -1090,6 +1111,7 @@
         matches: structuredClone(starterMatches),
         round16Matches: structuredClone(starterRound16Matches),
         quarterFinalMatches: structuredClone(starterQuarterFinalMatches),
+        semiFinalMatches: structuredClone(starterSemiFinalMatches),
         previousRanks: {}
       };
     }
@@ -1103,6 +1125,7 @@
         matches: Array.isArray(nextState.matches) ? nextState.matches.map(normalizeMatch) : structuredClone(starterMatches),
         round16Matches: Array.isArray(nextState.round16Matches) ? nextState.round16Matches.map(normalizeMatch) : structuredClone(starterRound16Matches),
         quarterFinalMatches: Array.isArray(nextState.quarterFinalMatches) ? nextState.quarterFinalMatches.map(normalizeMatch) : structuredClone(starterQuarterFinalMatches),
+        semiFinalMatches: Array.isArray(nextState.semiFinalMatches) ? nextState.semiFinalMatches.map(normalizeMatch) : structuredClone(starterSemiFinalMatches),
         previousRanks: nextState.previousRanks && typeof nextState.previousRanks === "object" ? nextState.previousRanks : {}
       };
     }
@@ -1194,7 +1217,7 @@
       if (match.round === "third-place") {
         return { perfect: 12, correct: 7, wrong: 0 };
       }
-      if (match.round === "semi-finals") {
+      if (match.round === "semi-finals" || semiFinalMatches.some((entry) => entry.id === match.id)) {
         return { perfect: 10, correct: 6, wrong: 0 };
       }
       if (match.round === "quarter-finals" || quarterFinalMatches.some((entry) => entry.id === match.id)) {
@@ -1218,6 +1241,7 @@
         matches,
         round16Matches,
         quarterFinalMatches,
+        semiFinalMatches,
         previousRanks
       };
     }
@@ -1304,15 +1328,16 @@
     function tableMatches() {
       if (activeTable === "round32") return matches;
       if (activeTable === "round16") return round16Matches;
-      return quarterFinalMatches;
+      if (activeTable === "quarter-finals") return quarterFinalMatches;
+      return semiFinalMatches;
     }
 
     function allMatches() {
-      return [...matches, ...round16Matches, ...quarterFinalMatches];
+      return [...matches, ...round16Matches, ...quarterFinalMatches, ...semiFinalMatches];
     }
 
     function setActiveTable(nextTable) {
-      activeTable = ["round32", "round16", "quarter-finals"].includes(nextTable) ? nextTable : "quarter-finals";
+      activeTable = ["round32", "round16", "quarter-finals", "semi-finals"].includes(nextTable) ? nextTable : "semi-finals";
       renderRounds();
       renderMatchTable();
     }
@@ -1321,7 +1346,8 @@
       const currentRound = rounds.find((round) => round.current);
       if (currentRound?.name === "Round of 32") return "round32";
       if (currentRound?.name === "Round of 16") return "round16";
-      return "quarter-finals";
+      if (currentRound?.name === "Quarter finals") return "quarter-finals";
+      return "semi-finals";
     }
 
     function renderTitle() {
@@ -1343,7 +1369,7 @@
 
     function renderMatchTable() {
       matchTable.innerHTML = "";
-      const tableLabel = { round32: "Round of 32", round16: "Round of 16", "quarter-finals": "Quarter finals" }[activeTable] || "Quarter finals";
+      const tableLabel = { round32: "Round of 32", round16: "Round of 16", "quarter-finals": "Quarter finals", "semi-finals": "Semi finals" }[activeTable] || "Semi finals";
       matchTable.setAttribute("aria-label", `${tableLabel} prediction table`);
       addMatchNode("match-head", "Game");
       playerNames.forEach((name) => addMatchNode("match-head player-head", playerProfiles[name]?.emoji || playerLabels[name] || name));
@@ -1447,7 +1473,7 @@
       rounds.forEach((round) => {
         const item = document.createElement("li");
         const roundName = round.name || "Round";
-        const tableId = roundName === "Round of 32" ? "round32" : roundName === "Round of 16" ? "round16" : roundName === "Quarter finals" ? "quarter-finals" : "";
+        const tableId = roundName === "Round of 32" ? "round32" : roundName === "Round of 16" ? "round16" : roundName === "Quarter finals" ? "quarter-finals" : roundName === "Semi finals" ? "semi-finals" : "";
         const isSelectedTable = activeView === "table" && tableId && activeTable === tableId;
         const isPast = !round.current && Number(round.done) >= Number(round.total) && Number(round.total) > 0;
         item.className = `round${round.current ? " current" : ""}${isPast ? " past" : ""}${isSelectedTable ? " table-selected" : ""}`;
