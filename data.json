@@ -3,35 +3,35 @@
     {
       "correct": 5,
       "name": "Otsar",
-      "stars": 18,
+      "stars": 19,
       "wrong": 5
     },
     {
       "correct": 9,
       "name": "Coral",
       "stars": 9,
-      "wrong": 9
+      "wrong": 10
     },
     {
       "correct": 4,
       "name": "David",
       "stars": 15,
-      "wrong": 9
+      "wrong": 10
     },
     {
       "correct": 5,
       "name": "Yosef",
       "stars": 18,
-      "wrong": 5
+      "wrong": 6
     },
     {
       "correct": 5,
       "name": "Shira",
       "stars": 17,
-      "wrong": 5
+      "wrong": 6
     },
     {
-      "correct": 7,
+      "correct": 8,
       "name": "Yonatan",
       "stars": 16,
       "wrong": 5
@@ -40,7 +40,7 @@
       "correct": 3,
       "name": "Iris",
       "stars": 8,
-      "wrong": 7
+      "wrong": 8
     },
     {
       "correct": 2,
@@ -70,7 +70,7 @@
     },
     {
       "current": true,
-      "done": 0,
+      "done": 1,
       "name": "Semi finals",
       "total": 2
     },
@@ -540,7 +540,15 @@
       "espnEventId": "760514",
       "id": "france-spain-sf",
       "label": "France v Spain",
-      "outcomes": {},
+      "outcomes": {
+        "Coral": "wrong",
+        "David": "wrong",
+        "Iris": "wrong",
+        "Otsar": "perfect",
+        "Shira": "wrong",
+        "Yonatan": "correct",
+        "Yosef": "wrong"
+      },
       "round": "semi-finals",
       "score": "Upcoming"
     },
