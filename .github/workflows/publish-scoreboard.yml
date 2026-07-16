@@ -60,6 +60,8 @@ jobs:
               round16Matches: preserveFinalScores(state.round16Matches, existingData.round16Matches),
               quarterFinalMatches: preserveFinalScores(state.quarterFinalMatches, existingData.quarterFinalMatches),
               semiFinalMatches: preserveFinalScores(state.semiFinalMatches || existingData.semiFinalMatches, existingData.semiFinalMatches),
+              thirdPlaceMatches: preserveFinalScores(state.thirdPlaceMatches || existingData.thirdPlaceMatches, existingData.thirdPlaceMatches),
+              finalMatches: preserveFinalScores(state.finalMatches || existingData.finalMatches, existingData.finalMatches),
               previousRanks: state.previousRanks && typeof state.previousRanks === "object" ? state.previousRanks : {}
             }, null, 2) + "\n";
 

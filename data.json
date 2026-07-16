@@ -569,6 +569,26 @@
       "score": "England 1-2, RT"
     }
   ],
+  "thirdPlaceMatches": [
+    {
+      "espnEventId": "760516",
+      "id": "france-england-third",
+      "label": "France v England",
+      "outcomes": {},
+      "round": "third-place",
+      "score": "Upcoming"
+    }
+  ],
+  "finalMatches": [
+    {
+      "espnEventId": "760517",
+      "id": "spain-argentina-final",
+      "label": "Spain v Argentina",
+      "outcomes": {},
+      "round": "finals",
+      "score": "Upcoming"
+    }
+  ],
   "previousRanks": {
     "Becky": 8,
     "Coral": 6,
