@@ -208,7 +208,121 @@
 
     .scoreboard {
       display: grid;
-      gap: 10px;
+      gap: 16px;
+    }
+
+    .podium {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: end;
+      gap: 6px;
+      min-height: 360px;
+      margin-top: 8px;
+    }
+
+    .podium-card {
+      --step-height: 84px;
+      display: grid;
+      align-items: end;
+      min-width: 0;
+      height: 100%;
+      color: var(--player-color, var(--ink));
+    }
+
+    .podium-card.place-1 {
+      --step-height: 132px;
+      order: 2;
+    }
+
+    .podium-card.place-2 {
+      --step-height: 100px;
+      order: 1;
+    }
+
+    .podium-card.place-3 {
+      --step-height: 72px;
+      order: 3;
+    }
+
+    .podium-person {
+      display: grid;
+      align-items: end;
+      min-height: 210px;
+      margin-bottom: -1px;
+    }
+
+    .podium-card.place-1 .podium-person {
+      min-height: 260px;
+    }
+
+    .podium-image {
+      display: block;
+      width: 100%;
+      max-height: 270px;
+      object-fit: contain;
+      object-position: center bottom;
+      filter: drop-shadow(0 0 14px rgba(255, 255, 255, .16));
+    }
+
+    .podium-card.place-1 .podium-image {
+      max-height: 320px;
+    }
+
+    .podium-step {
+      display: grid;
+      align-content: center;
+      gap: 5px;
+      min-height: var(--step-height);
+      padding: 10px 5px;
+      border: 1px solid var(--line);
+      background: #000;
+      box-shadow: 3px 3px 0 var(--player-color, var(--accent));
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .podium-rank {
+      color: var(--player-color, var(--ink));
+      font-size: 1.35rem;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .podium-names {
+      color: var(--player-color, var(--ink));
+      font-size: clamp(.72rem, 2.6vw, 1rem);
+      font-weight: 950;
+      line-height: 1.05;
+      overflow-wrap: anywhere;
+    }
+
+    .podium-points {
+      color: var(--player-color, var(--ink));
+      font-size: clamp(1.15rem, 4.2vw, 1.8rem);
+      font-weight: 950;
+      line-height: .95;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .podium-points span,
+    .final-score-list-title {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .58rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .final-score-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .final-score-list-title {
+      margin: 2px 0 0;
+      color: var(--ink);
+      font-size: .8rem;
     }
 
     .view[hidden] {
@@ -650,6 +764,9 @@
 
     @media (min-width: 640px) {
       main { padding-top: 28px; }
+      .podium { gap: 10px; min-height: 520px; }
+      .podium-person { min-height: 320px; }
+      .podium-card.place-1 .podium-person { min-height: 400px; }
       .player { grid-template-columns: 56px 1fr auto; padding: 16px; }
       .rank { width: 48px; height: 48px; }
       .score { font-size: 2rem; }
@@ -772,8 +889,8 @@
       { name: "Round of 16", done: 8, total: 8, current: false },
       { name: "Quarter finals", done: 4, total: 4, current: false },
       { name: "Semi finals", done: 2, total: 2, current: false },
-      { name: "3rd place play off", done: 0, total: 1, current: true },
-      { name: "Finals", done: 0, total: 1, current: false }
+      { name: "3rd place play off", done: 1, total: 1, current: false },
+      { name: "Finals", done: 1, total: 1, current: true }
     ];
 
     const playerNames = ["Otsar", "Coral", "David", "Yosef", "Shira", "Yonatan", "Iris", "Becky"];
@@ -796,6 +913,11 @@
       Yonatan: "YON",
       Iris: "IRI",
       Becky: "BEC"
+    };
+    const podiumImages = {
+      1: "assets/podium-1st.png",
+      2: "assets/podium-2nd.png",
+      3: "assets/podium-3rd.png"
     };
     const starterMatches = [
       {
@@ -1017,7 +1139,7 @@
       {
         id: "france-england-third",
         label: "France v England",
-        score: "Upcoming",
+        score: "France 4-6, RT",
         espnEventId: "760516",
         round: "third-place",
         outcomes: {}
@@ -1028,7 +1150,7 @@
       {
         id: "spain-argentina-final",
         label: "Spain v Argentina",
-        score: "Upcoming",
+        score: "Spain 1-0, ET",
         espnEventId: "760517",
         round: "finals",
         outcomes: {}
@@ -1283,18 +1405,87 @@
       renderRounds();
       renderMatchTable();
       scoreboard.innerHTML = "";
+      const ranked = rankedPlayers();
+      renderPodium(ranked);
+      renderFinalScoreList(ranked);
+    }
+
+    function rankedPlayers() {
       let previousPoints = null;
       let currentRank = 0;
-      sortedPlayers().forEach((player, index) => {
+      return sortedPlayers().map((player) => {
         const points = calculatePoints(player);
         if (points !== previousPoints) currentRank += 1;
-        const rank = currentRank;
         previousPoints = points;
-        const item = document.createElement("article");
-        const profile = playerProfiles[player.name] || { color: "var(--ink)", emoji: "" };
-        item.className = `player${rank === 1 ? " first-place" : ""}${rank === 2 ? " top-two" : ""}${rank === 3 ? " top-three" : ""}`;
-        item.style.setProperty("--player-color", profile.color);
-        item.innerHTML = `
+        return { player, points, rank: currentRank };
+      });
+    }
+
+    function renderPodium(ranked) {
+      const podium = document.createElement("section");
+      podium.className = "podium";
+      podium.setAttribute("aria-label", "Final podium");
+      [1, 2, 3].forEach((place) => {
+        const entries = ranked.filter((entry) => entry.rank === place);
+        podium.appendChild(createPodiumCard(place, entries));
+      });
+      scoreboard.appendChild(podium);
+    }
+
+    function createPodiumCard(place, entries) {
+      const lead = entries[0]?.player;
+      const profile = playerProfiles[lead?.name] || { color: "var(--ink)", emoji: "" };
+      const suffix = place === 1 ? "st" : place === 2 ? "nd" : "rd";
+      const card = document.createElement("article");
+      card.className = `podium-card place-${place}`;
+      card.style.setProperty("--player-color", profile.color);
+      card.innerHTML = `
+        <div class="podium-person">
+          <img class="podium-image" src="${podiumImages[place]}" alt="${place}${suffix} place">
+        </div>
+        <div class="podium-step">
+          <div class="podium-rank">${place}</div>
+          <div class="podium-names"></div>
+          <div class="podium-points">${entries[0]?.points ?? 0}<span>points</span></div>
+        </div>
+      `;
+      const names = card.querySelector(".podium-names");
+      if (!entries.length) {
+        names.textContent = "-";
+        return card;
+      }
+      entries.forEach((entry, index) => {
+        if (index) names.append(" / ");
+        const name = document.createElement("span");
+        const entryProfile = playerProfiles[entry.player.name] || profile;
+        name.style.color = entryProfile.color;
+        name.textContent = entry.player.name;
+        names.append(name);
+      });
+      return card;
+    }
+
+    function renderFinalScoreList(ranked) {
+      const title = document.createElement("h2");
+      title.className = "final-score-list-title";
+      title.textContent = "Final score";
+      scoreboard.appendChild(title);
+
+      const list = document.createElement("section");
+      list.className = "final-score-list";
+      list.setAttribute("aria-label", "Final scores");
+      ranked.forEach((entry) => {
+        list.appendChild(createPlayerCard(entry));
+      });
+      scoreboard.appendChild(list);
+    }
+
+    function createPlayerCard({ player, points, rank }) {
+      const item = document.createElement("article");
+      const profile = playerProfiles[player.name] || { color: "var(--ink)", emoji: "" };
+      item.className = `player${rank === 1 ? " first-place" : ""}${rank === 2 ? " top-two" : ""}${rank === 3 ? " top-three" : ""}`;
+      item.style.setProperty("--player-color", profile.color);
+      item.innerHTML = `
           <div class="rank">${rank}</div>
           <div class="name">
             <span class="player-name"></span>
@@ -1306,27 +1497,26 @@
             <span class="outcome-wrong">× ${Number(player.wrong) || 0}</span>
           </div>
         `;
-        item.querySelector(".player-name").innerHTML = "";
-        item.querySelector(".player-name").append(document.createTextNode(player.name || "Unnamed"));
-        if (profile.emoji) {
-          const emoji = document.createElement("span");
-          emoji.className = "player-emoji";
-          emoji.textContent = profile.emoji;
-          item.querySelector(".player-name").append(" ", emoji);
+      item.querySelector(".player-name").innerHTML = "";
+      item.querySelector(".player-name").append(document.createTextNode(player.name || "Unnamed"));
+      if (profile.emoji) {
+        const emoji = document.createElement("span");
+        emoji.className = "player-emoji";
+        emoji.textContent = profile.emoji;
+        item.querySelector(".player-name").append(" ", emoji);
+      }
+      const movement = movementFor(player.name, rank);
+      const moveEl = item.querySelector(".score-move");
+      moveEl.textContent = movement.label;
+      item.addEventListener("click", () => item.classList.toggle("open"));
+      item.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          item.classList.toggle("open");
         }
-        const movement = movementFor(player.name, rank);
-        const moveEl = item.querySelector(".score-move");
-        moveEl.textContent = movement.label;
-        item.addEventListener("click", () => item.classList.toggle("open"));
-        item.addEventListener("keydown", (event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            item.classList.toggle("open");
-          }
-        });
-        item.tabIndex = 0;
-        scoreboard.appendChild(item);
       });
+      item.tabIndex = 0;
+      return item;
     }
 
     function movementFor(playerName, currentRank) {
