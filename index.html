@@ -240,7 +240,7 @@
     }
 
     .podium-card.place-3 {
-      --step-height: 72px;
+      --step-height: 96px;
       order: 3;
     }
 
@@ -257,11 +257,12 @@
 
     .podium-card.place-2 .podium-person {
       min-height: 235px;
-      margin-bottom: -48px;
+      margin-bottom: -62px;
     }
 
     .podium-card.place-3 .podium-person {
       min-height: 185px;
+      margin-bottom: -106px;
     }
 
     .podium-image {
@@ -289,7 +290,7 @@
       display: grid;
       align-content: center;
       gap: 5px;
-      min-height: var(--step-height);
+      height: var(--step-height);
       padding: 10px 5px;
       border: 1px solid var(--line);
       background: #000;
@@ -311,6 +312,10 @@
       font-weight: 950;
       line-height: 1.05;
       overflow-wrap: anywhere;
+    }
+
+    .podium-card.place-3 .podium-names {
+      font-size: clamp(.64rem, 2.2vw, .86rem);
     }
 
     .podium-points {
@@ -785,7 +790,7 @@
       .podium-person { min-height: 320px; }
       .podium-card.place-1 .podium-person { min-height: 400px; }
       .podium-card.place-2 .podium-person { min-height: 360px; }
-      .podium-card.place-3 .podium-person { min-height: 300px; }
+      .podium-card.place-3 .podium-person { min-height: 300px; margin-bottom: -130px; }
       .player { grid-template-columns: 56px 1fr auto; padding: 16px; }
       .rank { width: 48px; height: 48px; }
       .score { font-size: 2rem; }
