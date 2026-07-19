@@ -76,7 +76,7 @@
     },
     {
       "current": true,
-      "done": 0,
+      "done": 1,
       "name": "3rd place play off",
       "total": 1
     },
@@ -583,7 +583,7 @@
         "Yonatan": "wrong"
       },
       "round": "third-place",
-      "score": "Upcoming"
+      "score": "France 4-6, RT"
     }
   ],
   "finalMatches": [
