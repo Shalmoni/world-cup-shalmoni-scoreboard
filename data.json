@@ -75,13 +75,13 @@
       "total": 2
     },
     {
-      "current": true,
+      "current": false,
       "done": 1,
       "name": "3rd place play off",
       "total": 1
     },
     {
-      "current": false,
+      "current": true,
       "done": 0,
       "name": "Finals",
       "total": 1
