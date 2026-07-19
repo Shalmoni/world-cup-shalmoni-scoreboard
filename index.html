@@ -318,6 +318,10 @@
       font-size: clamp(.64rem, 2.2vw, .86rem);
     }
 
+    .podium-separator {
+      color: var(--ink);
+    }
+
     .podium-points {
       color: var(--player-color, var(--ink));
       font-size: clamp(1.15rem, 4.2vw, 1.8rem);
@@ -938,6 +942,7 @@
       Iris: "IRI",
       Becky: "BEC"
     };
+    const tieBreakOrder = ["Yonatan", "Shira", "Yosef", "Otsar", "David", "Coral", "Iris", "Becky"];
     const podiumImages = {
       1: "assets/podium-1st.png",
       2: "assets/podium-2nd.png",
@@ -1361,7 +1366,13 @@
     }
 
     function sortedPlayers() {
-      return [...players].sort((a, b) => calculatePoints(b) - calculatePoints(a) || a.name.localeCompare(b.name));
+      return [...players].sort((a, b) => {
+        const pointsDelta = calculatePoints(b) - calculatePoints(a);
+        if (pointsDelta) return pointsDelta;
+        const orderDelta = tieBreakOrder.indexOf(a.name) - tieBreakOrder.indexOf(b.name);
+        if (orderDelta) return orderDelta;
+        return a.name.localeCompare(b.name);
+      });
     }
 
     function calculatePoints(player) {
@@ -1479,7 +1490,12 @@
         return card;
       }
       entries.forEach((entry, index) => {
-        if (index) names.append(" / ");
+        if (index) {
+          const separator = document.createElement("span");
+          separator.className = "podium-separator";
+          separator.textContent = " / ";
+          names.append(separator);
+        }
         const name = document.createElement("span");
         const entryProfile = playerProfiles[entry.player.name] || profile;
         name.style.color = entryProfile.color;
