@@ -4,34 +4,34 @@
       "correct": 5,
       "name": "Otsar",
       "stars": 19,
-      "wrong": 7
+      "wrong": 8
     },
     {
       "correct": 10,
       "name": "Coral",
       "stars": 9,
-      "wrong": 11
+      "wrong": 12
     },
     {
       "correct": 4,
       "name": "David",
       "stars": 15,
-      "wrong": 12
+      "wrong": 13
     },
     {
       "correct": 5,
       "name": "Yosef",
       "stars": 19,
-      "wrong": 6
+      "wrong": 7
     },
     {
       "correct": 6,
       "name": "Shira",
       "stars": 18,
-      "wrong": 6
+      "wrong": 7
     },
     {
-      "correct": 9,
+      "correct": 10,
       "name": "Yonatan",
       "stars": 16,
       "wrong": 6
@@ -40,7 +40,7 @@
       "correct": 4,
       "name": "Iris",
       "stars": 9,
-      "wrong": 8
+      "wrong": 9
     },
     {
       "correct": 2,
@@ -82,7 +82,7 @@
     },
     {
       "current": true,
-      "done": 0,
+      "done": 1,
       "name": "Finals",
       "total": 1
     }
@@ -591,7 +591,15 @@
       "espnEventId": "760517",
       "id": "spain-argentina-final",
       "label": "Spain v Argentina",
-      "outcomes": {},
+      "outcomes": {
+        "Coral": "wrong",
+        "David": "wrong",
+        "Iris": "wrong",
+        "Otsar": "wrong",
+        "Shira": "wrong",
+        "Yonatan": "correct",
+        "Yosef": "wrong"
+      },
       "round": "finals",
       "score": "Upcoming"
     }
@@ -601,9 +609,9 @@
     "Coral": 5,
     "David": 4,
     "Iris": 6,
-    "Otsar": 1,
-    "Shira": 3,
-    "Yonatan": 2,
-    "Yosef": 1
+    "Otsar": 2,
+    "Shira": 1,
+    "Yonatan": 3,
+    "Yosef": 2
   }
 }
